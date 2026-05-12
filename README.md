@@ -16,21 +16,21 @@ The report and presentation were used as project references. They are not commit
 
 ```text
 .
-├── main.ipynb
-├── requirements.txt
-├── artifacts/
-│   └── tfidf_and_encoders.pkl
-├── data/
-│   ├── raw/
-│   │   ├── anime.csv
-│   │   ├── anime_test.csv
-│   │   ├── rating_complete.csv
-│   │   └── rating_test.csv
-│   └── processed/
-│       ├── meta_preprocessed.csv
-│       └── meta_train_ready.csv
-└── models/
-    └── .gitkeep
+|-- main.ipynb
+|-- requirements.txt
+|-- artifacts/
+|   `-- tfidf_and_encoders.pkl
+|-- data/
+|   |-- raw/
+|   |   |-- anime.csv
+|   |   |-- anime_test.csv
+|   |   |-- rating_complete.csv
+|   |   `-- rating_test.csv
+|   `-- processed/
+|       |-- meta_preprocessed.csv
+|       `-- meta_train_ready.csv
+`-- models/
+    `-- .gitkeep
 ```
 
 ## Data Notes
