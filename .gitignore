@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Training outputs
+catboost_info/
+models/*.pkl
+models/*.joblib
+models/*.h5
+models/*.keras
+!models/.gitkeep
+
+# OS/editor
+.DS_Store
+Thumbs.db
