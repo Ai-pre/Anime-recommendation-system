@@ -16,8 +16,15 @@ The report and presentation were used as project references. They are not commit
 
 ```text
 .
+|-- main.py
 |-- main.ipynb
 |-- requirements.txt
+|-- anime_recommender/
+|   |-- inference.py
+|   |-- training.py
+|   |-- preprocessing.py
+|   |-- config.py
+|   `-- io.py
 |-- artifacts/
 |   `-- tfidf_and_encoders.pkl
 |-- data/
@@ -37,7 +44,15 @@ The report and presentation were used as project references. They are not commit
 
 `rating_complete.csv` and `rating_test.csv` are larger than GitHub's normal 100MB file limit, so they are tracked with Git LFS.
 
-The trained model files from the local `models/` directory are intentionally excluded because they are several gigabytes each. Re-run the training cells in `main.ipynb` to regenerate them.
+The trained model files from the local `models/` directory are intentionally excluded because they are several gigabytes each. If you already have them locally, put them here:
+
+```text
+models/svd_model.pkl
+models/meta_model.pkl
+models/item_sim_matrix_all.pkl
+```
+
+`item_sim_matrix_all.pkl` is optional when `meta_model.pkl` already contains `item_sim_matrix`.
 
 ## Setup
 
@@ -45,17 +60,40 @@ The trained model files from the local `models/` directory are intentionally exc
 git lfs install
 git lfs pull
 python -m pip install -r requirements.txt
-jupyter notebook main.ipynb
 ```
 
-## Main Notebook
+If you already have the large CSV files locally, you can copy them directly into `data/raw/` instead of using Git LFS.
 
-`main.ipynb` is organized into:
+## CLI Usage
 
-- Data loading and inspection.
-- Metadata preprocessing and TF-IDF feature generation.
-- SVD baseline evaluation.
-- Hybrid meta-training dataset usage.
-- XGBoost, LightGBM, and CatBoost comparison.
-- Similar-anime recommendation examples.
-- Optional visualization and interpretation sections.
+The primary entry point is `main.py`.
+
+Check whether data and models are in the expected paths:
+
+```bash
+python main.py check
+```
+
+Run inference with existing model files:
+
+```bash
+python main.py similar --title "Naruto" --top-n 10
+python main.py recommend-user --user-id 116169 --top-n 10
+python main.py meta-similar --title "Koe no Katachi" --top-n 10
+```
+
+Train only the meta learner from the precomputed `meta_train_ready.csv`:
+
+```bash
+python main.py train-meta
+```
+
+Run the full heavy training pipeline from raw ratings:
+
+```bash
+python main.py train-full --sample-users 3000
+```
+
+## Notebook
+
+`main.ipynb` is kept as an exploratory/report notebook. For server runs, prefer the CLI pipeline above because training and inference are separated cleanly.

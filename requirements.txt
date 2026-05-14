@@ -12,3 +12,4 @@ plotly
 shap
 joblib
 jupyter
+ipykernel
