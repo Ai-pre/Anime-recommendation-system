@@ -13,8 +13,11 @@
     <section class="hero compact">
       <p class="eyebrow">Shared Taste Page</p>
       <h1>Your anime taste radar result</h1>
-      <p class="lead">Views {{ views }} · Share ID {{ slug }}</p>
-      <a class="ghost-link" href="/">Create another</a>
+      <p class="lead">Views {{ views }} - Share ID {{ slug }}</p>
+      <div class="hero-actions">
+        <a class="ghost-link" href="/">Create another</a>
+        <a class="ghost-link muted" href="{{ url_for('anime_map') }}" target="_blank" rel="noreferrer">Open 3D Anime Map</a>
+      </div>
     </section>
 
     <section class="panel">

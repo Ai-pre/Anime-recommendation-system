@@ -38,6 +38,13 @@ body {
   padding-bottom: 10px;
 }
 
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 22px;
+}
+
 .eyebrow {
   margin: 0 0 12px;
   color: var(--coral);
@@ -99,9 +106,57 @@ button,
   text-decoration: none;
 }
 
+.ghost-link.muted {
+  background: rgba(24, 22, 17, 0.1);
+  color: var(--ink);
+}
+
 .primary {
   background: linear-gradient(135deg, var(--coral), var(--gold));
   color: #1c130f;
+}
+
+.feature-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+  margin: 0 0 18px;
+}
+
+.feature-card {
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  padding: 22px;
+  background: rgba(255, 255, 255, 0.44);
+}
+
+.feature-card span {
+  color: var(--coral);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.feature-card strong {
+  display: block;
+  margin-top: 8px;
+  font-size: 24px;
+  line-height: 1.05;
+}
+
+.feature-card p {
+  margin-bottom: 0;
+  color: rgba(24, 22, 17, 0.64);
+  line-height: 1.5;
+}
+
+.command-block {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 16px;
+  background: rgba(24, 22, 17, 0.08);
 }
 
 .search-results,

@@ -111,6 +111,12 @@ python app.py --host 0.0.0.0 --port 8000
 
 Open `http://SERVER_IP:8000`. Users can search and select anime titles, create a content-based recommendation page, and share the generated `/r/<slug>` URL. View counts are stored in `artifacts/recommendation_pages.sqlite3`.
 
+The web app also exposes the generated interactive 3D anime map at `/map`. Create it first with:
+
+```bash
+python main.py visualize-3d --output artifacts/anime_tsne_3d.html
+```
+
 For a production-style process:
 
 ```bash

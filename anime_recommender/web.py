@@ -8,7 +8,7 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-from flask import Flask, abort, jsonify, render_template, request, url_for
+from flask import Flask, abort, jsonify, render_template, request, send_file, url_for
 
 from .config import ProjectPaths
 
@@ -122,10 +122,17 @@ def create_app(root: str | Path = ".") -> Flask:
     app = Flask(__name__, template_folder="../templates", static_folder="../static")
     recommender = ContentTasteRecommender(paths)
     db_path = paths.artifacts_dir / "recommendation_pages.sqlite3"
+    map_path = paths.artifacts_dir / "anime_tsne_3d.html"
 
     @app.get("/")
     def index():
         return render_template("index.html")
+
+    @app.get("/map")
+    def anime_map():
+        if not map_path.exists():
+            return render_template("map_missing.html"), 404
+        return send_file(map_path)
 
     @app.get("/api/search")
     def api_search():
