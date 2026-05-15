@@ -109,7 +109,7 @@ Run the shareable web version:
 python app.py --host 0.0.0.0 --port 8000
 ```
 
-Open `http://SERVER_IP:8000`. Users can search and select anime titles, create a content-based recommendation page, and share the generated `/r/<slug>` URL. View counts are stored in `artifacts/recommendation_pages.sqlite3`.
+Open `http://SERVER_IP:8000`. Users can search and select anime titles, create a content-based recommendation page, and share the generated `/r/<slug>` URL. View counts are stored in `artifacts/recommendation_pages.sqlite3`. The web UI defaults to avoiding repeated entries from the same franchise so public recommendations feel more discovery-oriented.
 
 The web app also exposes the generated interactive 3D anime map at `/map`. Create it first with:
 

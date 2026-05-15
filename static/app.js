@@ -57,9 +57,28 @@ async function searchAnime() {
 
 function renderRecommendations(items, shareUrl) {
   preview.innerHTML = "";
+  const fullUrl = `${location.origin}${shareUrl}`;
   const linkCard = document.createElement("article");
-  linkCard.className = "card";
-  linkCard.innerHTML = `<div class="rank">Go</div><h3>Share page created</h3><p>${location.origin}${shareUrl}</p><div class="meta"><span>View counter enabled</span></div>`;
+  linkCard.className = "card share-card";
+  linkCard.innerHTML = `
+    <div class="rank">Go</div>
+    <h3>Share page created</h3>
+    <p class="share-url">${fullUrl}</p>
+    <div class="meta">
+      <span>View counter enabled</span>
+      <button class="copy-button" type="button">Copy link</button>
+    </div>
+  `;
+  const copyButton = linkCard.querySelector(".copy-button");
+  copyButton.addEventListener("click", async (event) => {
+    event.stopPropagation();
+    try {
+      await navigator.clipboard.writeText(fullUrl);
+      copyButton.textContent = "Copied";
+    } catch {
+      copyButton.textContent = "Copy failed";
+    }
+  });
   linkCard.addEventListener("click", () => {
     location.href = shareUrl;
   });
@@ -95,6 +114,7 @@ async function makeRecommendation() {
       anime_ids: [...selected.keys()],
       min_members: Number($("#minMembers").value || 0),
       top_n: Number($("#topN").value || 12),
+      avoid_same_series: $("#avoidSameSeries").checked,
     }),
   });
   const data = await response.json();

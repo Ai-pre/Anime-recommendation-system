@@ -93,6 +93,11 @@ input {
   font: inherit;
 }
 
+input[type="checkbox"] {
+  width: auto;
+  accent-color: var(--coral);
+}
+
 button,
 .ghost-link {
   border: 0;
@@ -247,6 +252,16 @@ button,
   font-weight: 800;
 }
 
+.actions .toggle {
+  align-items: center;
+  align-self: stretch;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  min-width: auto;
+  padding: 0 8px;
+}
+
 .rank {
   width: 48px;
   height: 48px;
@@ -260,6 +275,16 @@ button,
 
 .card {
   min-height: 220px;
+}
+
+.share-card {
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.share-url {
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .card h3 {
@@ -280,6 +305,14 @@ button,
   color: #173f37;
   font-size: 12px;
   font-weight: 800;
+}
+
+.copy-button {
+  border-radius: 999px;
+  padding: 7px 10px;
+  background: rgba(33, 58, 92, 0.12);
+  color: var(--blue);
+  font-size: 12px;
 }
 
 @media (max-width: 640px) {
