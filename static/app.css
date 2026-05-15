@@ -253,21 +253,15 @@ button,
   font-weight: 800;
 }
 
-.field-help {
-  color: rgba(24, 22, 17, 0.5);
-  font-size: 12px;
-  font-weight: 700;
-  line-height: 1.35;
-}
-
 .actions .toggle {
   align-items: center;
-  align-self: stretch;
+  align-self: end;
   display: flex;
   flex-direction: row;
   gap: 10px;
   min-width: auto;
-  padding: 0 8px;
+  min-height: 78px;
+  padding: 0 8px 15px;
 }
 
 .rank {
