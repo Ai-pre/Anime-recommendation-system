@@ -13,7 +13,7 @@ function renderSelected() {
   selectedList.innerHTML = "";
   selectedList.classList.toggle("empty", selected.size === 0);
   if (selected.size === 0) {
-    selectedList.textContent = "No anime selected yet.";
+    selectedList.textContent = "아직 선택한 애니가 없습니다.";
     return;
   }
   for (const item of selected.values()) {
@@ -32,14 +32,14 @@ function renderSelected() {
 }
 
 function animeMeta(item) {
-  return `${item.type} - Score ${item.score ?? "?"} - ${item.genres}`;
+  return `${item.type} - 평점 ${item.score ?? "?"} - ${item.genres}`;
 }
 
 async function searchAnime() {
   const query = searchInput.value.trim();
   searchResults.innerHTML = "";
   if (!query) return;
-  statusEl.textContent = "Searching...";
+  statusEl.textContent = "검색 중...";
   const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
   const data = await response.json();
   statusEl.textContent = "";
@@ -61,12 +61,12 @@ function renderRecommendations(items, shareUrl) {
   const linkCard = document.createElement("article");
   linkCard.className = "card share-card";
   linkCard.innerHTML = `
-    <div class="rank">Go</div>
-    <h3>Share page created</h3>
+    <div class="rank">공유</div>
+    <h3>공유 링크 생성 완료</h3>
     <p class="share-url">${fullUrl}</p>
     <div class="meta">
-      <span>View counter enabled</span>
-      <button class="copy-button" type="button">Copy link</button>
+      <span>조회수 기록 중</span>
+      <button class="copy-button" type="button">링크 복사</button>
     </div>
   `;
   const copyButton = linkCard.querySelector(".copy-button");
@@ -74,9 +74,9 @@ function renderRecommendations(items, shareUrl) {
     event.stopPropagation();
     try {
       await navigator.clipboard.writeText(fullUrl);
-      copyButton.textContent = "Copied";
+      copyButton.textContent = "복사 완료";
     } catch {
-      copyButton.textContent = "Copy failed";
+      copyButton.textContent = "복사 실패";
     }
   });
   linkCard.addEventListener("click", () => {
@@ -93,8 +93,8 @@ function renderRecommendations(items, shareUrl) {
       <p>${item.genres}</p>
       <div class="meta">
         <span>${item.type}</span>
-        <span>Score ${item.score ?? "?"}</span>
-        <span>Match ${(item.taste_score * 100).toFixed(1)}%</span>
+        <span>평점 ${item.score ?? "?"}</span>
+        <span>유사도 ${(item.taste_score * 100).toFixed(1)}%</span>
       </div>
     `;
     preview.appendChild(card);
@@ -103,10 +103,10 @@ function renderRecommendations(items, shareUrl) {
 
 async function makeRecommendation() {
   if (selected.size === 0) {
-    statusEl.textContent = "Select at least one anime first.";
+    statusEl.textContent = "먼저 애니를 하나 이상 선택하세요.";
     return;
   }
-  statusEl.textContent = "Calculating your taste radar...";
+  statusEl.textContent = "추천 계산 중...";
   const response = await fetch("/api/recommend", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -119,10 +119,10 @@ async function makeRecommendation() {
   });
   const data = await response.json();
   if (!response.ok) {
-    statusEl.textContent = data.error || "Could not create recommendations.";
+    statusEl.textContent = data.error || "추천 생성 실패";
     return;
   }
-  statusEl.textContent = "Ready. Click the first card to open the share page.";
+  statusEl.textContent = "완료. 첫 카드를 누르면 공유 페이지로 이동합니다.";
   renderRecommendations(data.recommendations, data.share_url);
 }
 

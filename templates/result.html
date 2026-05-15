@@ -1,27 +1,27 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Anime Taste Radar Result</title>
-  <meta property="og:title" content="Anime Taste Radar Result">
-  <meta property="og:description" content="A shareable anime recommendation page generated from watched and liked titles.">
+  <title>애니 추천 결과</title>
+  <meta property="og:title" content="애니 추천 결과">
+  <meta property="og:description" content="취향 기반 애니 추천 결과입니다.">
   <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
 </head>
 <body>
   <main class="shell">
     <section class="hero compact">
-      <p class="eyebrow">Shared Taste Page</p>
-      <h1>Your anime taste radar result</h1>
-      <p class="lead">Views {{ views }} - Share ID {{ slug }}</p>
+      <p class="eyebrow">추천 결과</p>
+      <h1>내 취향 추천</h1>
+      <p class="lead">조회수 {{ views }} - 공유 ID {{ slug }}</p>
       <div class="hero-actions">
-        <a class="ghost-link" href="/">Create another</a>
-        <a class="ghost-link muted" href="{{ url_for('anime_map') }}" target="_blank" rel="noreferrer">Open 3D Anime Map</a>
+        <a class="ghost-link" href="/">다시 만들기</a>
+        <a class="ghost-link muted" href="{{ url_for('anime_map') }}" target="_blank" rel="noreferrer">3D 지도 보기</a>
       </div>
     </section>
 
     <section class="panel">
-      <h2>Selected anime</h2>
+      <h2>선택한 애니</h2>
       <div class="chips">
         {% for item in selected %}
           <span class="chip">{{ item.title }}</span>
@@ -37,8 +37,8 @@
         <p>{{ item.genres }}</p>
         <div class="meta">
           <span>{{ item.type }}</span>
-          <span>Score {{ item.score }}</span>
-          <span>Match {{ "%.1f"|format(item.taste_score * 100) }}%</span>
+          <span>평점 {{ item.score }}</span>
+          <span>유사도 {{ "%.1f"|format(item.taste_score * 100) }}%</span>
         </div>
       </article>
       {% endfor %}

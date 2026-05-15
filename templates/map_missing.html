@@ -1,19 +1,19 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>3D Anime Map Missing</title>
+  <title>3D 지도 없음</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
 </head>
 <body>
   <main class="shell">
     <section class="hero compact">
-      <p class="eyebrow">3D Anime Map</p>
-      <h1>The 3D map has not been generated yet.</h1>
-      <p class="lead">Run the command below on the server, then refresh this page.</p>
+      <p class="eyebrow">3D 지도</p>
+      <h1>아직 3D 지도가 없습니다.</h1>
+      <p class="lead">서버에서 아래 명령을 실행한 뒤 새로고침하세요.</p>
       <pre class="command-block">python main.py visualize-3d --output artifacts/anime_tsne_3d.html</pre>
-      <a class="ghost-link" href="/">Back to recommender</a>
+      <a class="ghost-link" href="/">추천으로 돌아가기</a>
     </section>
   </main>
 </body>

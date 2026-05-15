@@ -1,52 +1,52 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Anime Taste Radar</title>
-  <meta property="og:title" content="Anime Taste Radar">
-  <meta property="og:description" content="Create a shareable anime recommendation page from titles you like.">
+  <title>애니 취향 레이더</title>
+  <meta property="og:title" content="애니 취향 레이더">
+  <meta property="og:description" content="좋아하는 애니로 비슷한 작품을 추천받아 보세요.">
   <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
 </head>
 <body>
   <main class="shell">
     <section class="hero">
-      <p class="eyebrow">Content-Based Anime Recommender</p>
-      <h1>Build your anime taste radar.</h1>
-      <p class="lead">Pick a few anime you like. The site uses content similarity across genres, studios, type, source, rating, and popularity to create a shareable recommendation page.</p>
+      <p class="eyebrow">콘텐츠 기반 애니 추천</p>
+      <h1>내 애니 취향 찾기</h1>
+      <p class="lead">좋아하는 애니를 몇 개 고르면 장르, 제작사, 유형 정보를 바탕으로 비슷한 작품을 추천합니다.</p>
       <div class="hero-actions">
-        <a class="ghost-link" href="{{ url_for('anime_map') }}" target="_blank" rel="noreferrer">Open 3D Anime Map</a>
+        <a class="ghost-link" href="{{ url_for('anime_map') }}" target="_blank" rel="noreferrer">3D 지도 보기</a>
       </div>
     </section>
 
     <section class="feature-strip">
       <article class="feature-card">
-        <span>Explore</span>
-        <strong>3D similarity space</strong>
-        <p>Rotate the t-SNE map to see which anime cluster together by content metadata.</p>
+        <span>지도</span>
+        <strong>비슷한 애니 위치 보기</strong>
+        <p>3D 공간에서 작품들이 어떻게 모이는지 볼 수 있습니다.</p>
       </article>
       <article class="feature-card">
-        <span>Recommend</span>
-        <strong>Shareable taste pages</strong>
-        <p>Create a public result page from titles you watched or liked, with a simple view counter.</p>
+        <span>추천</span>
+        <strong>공유 가능한 추천 결과</strong>
+        <p>결과 페이지를 만들고 링크로 공유할 수 있습니다.</p>
       </article>
     </section>
 
     <section class="composer panel">
       <div class="search-row">
-        <input id="searchInput" autocomplete="off" placeholder="Try Naruto, Koe no Katachi, Made in Abyss">
-        <button id="searchButton">Search</button>
+        <input id="searchInput" autocomplete="off" placeholder="예: Naruto, Koe no Katachi, Made in Abyss">
+        <button id="searchButton">검색</button>
       </div>
       <div id="searchResults" class="search-results"></div>
       <div class="selected-wrap">
-        <h2>Your watched or liked anime</h2>
-        <div id="selectedList" class="chips empty">No anime selected yet.</div>
+        <h2>내가 본 애니</h2>
+        <div id="selectedList" class="chips empty">아직 선택한 애니가 없습니다.</div>
       </div>
       <div class="actions">
-        <label>Minimum MAL members <input id="minMembers" type="number" value="5000" min="0" step="1000"></label>
-        <label>Recommendation count <input id="topN" type="number" value="12" min="3" max="30"></label>
-        <label class="toggle"><input id="avoidSameSeries" type="checkbox" checked> Avoid same series</label>
-        <button id="recommendButton" class="primary">Create share page</button>
+        <label>최소 MAL 멤버 <input id="minMembers" type="number" value="5000" min="0" step="1000"></label>
+        <label>추천 개수 <input id="topN" type="number" value="12" min="3" max="30"></label>
+        <label class="toggle"><input id="avoidSameSeries" type="checkbox" checked> 같은 시리즈 제외</label>
+        <button id="recommendButton" class="primary">추천 만들기</button>
       </div>
       <p id="status" class="status"></p>
     </section>
