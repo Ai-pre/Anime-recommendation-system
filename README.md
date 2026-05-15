@@ -131,6 +131,16 @@ tmux new-session -d -s anime_web 'cd ~/animation_recommendation && gunicorn -w 1
 
 If `http://SERVER_IP:8000` does not open from another device, the server is listening correctly but the public network/firewall is blocking port 8000. In that case, either open TCP 8000 or use a tunnel service such as Cloudflare Tunnel or ngrok.
 
+## Member Hybrid Web App
+
+Run the separate member-based hybrid version:
+
+```bash
+python member_app.py --host 0.0.0.0 --port 8100
+```
+
+Users can sign up, rate anime from search results, and unlock personalized recommendations after 10 ratings. New users are handled with an SVD fold-in vector plus content-based profile scores, so ratings can affect recommendations immediately without retraining the full SVD model on every click. Full SVD retraining should be done later as a batch job after enough new ratings accumulate.
+
 Train only the meta learner from the precomputed `meta_train_ready.csv`:
 
 ```bash
