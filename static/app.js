@@ -55,23 +55,9 @@ async function searchAnime() {
   }
 }
 
-function renderRecommendations(items, shareUrl) {
+function renderRecommendations(items) {
   preview.innerHTML = "";
-  const fullUrl = `${location.origin}${shareUrl}`;
-  statusEl.innerHTML = `
-    추천 완료.
-    <a class="inline-link" href="${shareUrl}">공유 페이지 열기</a>
-    <button class="inline-copy" type="button">링크 복사</button>
-  `;
-  const copyButton = statusEl.querySelector(".inline-copy");
-  copyButton.addEventListener("click", async () => {
-    try {
-      await navigator.clipboard.writeText(fullUrl);
-      copyButton.textContent = "복사 완료";
-    } catch {
-      copyButton.textContent = "복사 실패";
-    }
-  });
+  statusEl.textContent = "추천 완료.";
 
   items.forEach((item, idx) => {
     const card = document.createElement("article");
@@ -111,7 +97,7 @@ async function makeRecommendation() {
     statusEl.textContent = data.error || "추천 생성 실패";
     return;
   }
-  renderRecommendations(data.recommendations, data.share_url);
+  renderRecommendations(data.recommendations);
 }
 
 searchButton.addEventListener("click", searchAnime);

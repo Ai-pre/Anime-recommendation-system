@@ -1,15 +1,11 @@
 from __future__ import annotations
 
-import json
 import re
-import sqlite3
-import uuid
-from datetime import datetime, timezone
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
-from flask import Flask, abort, jsonify, render_template, request, send_file, url_for
+from flask import Flask, jsonify, render_template, request, send_file
 
 from .config import ProjectPaths
 
@@ -44,7 +40,7 @@ SERIES_STOP_WORDS = {
 
 
 class ContentTasteRecommender:
-    """Fast content-based recommender for public web sharing."""
+    """Fast content-based recommender for the web UI."""
 
     def __init__(self, paths: ProjectPaths):
         self.paths = paths
@@ -171,29 +167,10 @@ class ContentTasteRecommender:
         return payload
 
 
-def _connect_db(path: Path) -> sqlite3.Connection:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    conn = sqlite3.connect(path)
-    conn.row_factory = sqlite3.Row
-    conn.execute(
-        """
-        CREATE TABLE IF NOT EXISTS recommendation_pages (
-            slug TEXT PRIMARY KEY,
-            selected_json TEXT NOT NULL,
-            recommendations_json TEXT NOT NULL,
-            views INTEGER NOT NULL DEFAULT 0,
-            created_at TEXT NOT NULL
-        )
-        """
-    )
-    return conn
-
-
 def create_app(root: str | Path = ".") -> Flask:
     paths = ProjectPaths(Path(root))
     app = Flask(__name__, template_folder="../templates", static_folder="../static")
     recommender = ContentTasteRecommender(paths)
-    db_path = paths.artifacts_dir / "recommendation_pages.sqlite3"
     map_path = paths.artifacts_dir / "anime_tsne_3d.html"
 
     @app.get("/")
@@ -228,57 +205,10 @@ def create_app(root: str | Path = ".") -> Flask:
         except ValueError as exc:
             return jsonify({"error": str(exc)}), 400
 
-        slug = uuid.uuid4().hex[:10]
-        now = datetime.now(timezone.utc).isoformat()
-        with _connect_db(db_path) as conn:
-            conn.execute(
-                """
-                INSERT INTO recommendation_pages (slug, selected_json, recommendations_json, views, created_at)
-                VALUES (?, ?, ?, 0, ?)
-                """,
-                (slug, json.dumps(selected, ensure_ascii=False), json.dumps(recommendations, ensure_ascii=False), now),
-            )
-
-        share_url = url_for("result_page", slug=slug, _external=False)
         return jsonify(
             {
-                "slug": slug,
-                "share_url": share_url,
                 "selected": selected,
                 "recommendations": recommendations,
-            }
-        )
-
-    @app.get("/r/<slug>")
-    def result_page(slug: str):
-        with _connect_db(db_path) as conn:
-            row = conn.execute("SELECT * FROM recommendation_pages WHERE slug = ?", (slug,)).fetchone()
-            if row is None:
-                abort(404)
-            conn.execute("UPDATE recommendation_pages SET views = views + 1 WHERE slug = ?", (slug,))
-            views = int(row["views"]) + 1
-        return render_template(
-            "result.html",
-            slug=slug,
-            selected=json.loads(row["selected_json"]),
-            recommendations=json.loads(row["recommendations_json"]),
-            views=views,
-            created_at=row["created_at"],
-        )
-
-    @app.get("/api/result/<slug>")
-    def api_result(slug: str):
-        with _connect_db(db_path) as conn:
-            row = conn.execute("SELECT * FROM recommendation_pages WHERE slug = ?", (slug,)).fetchone()
-        if row is None:
-            return jsonify({"error": "not found"}), 404
-        return jsonify(
-            {
-                "slug": slug,
-                "selected": json.loads(row["selected_json"]),
-                "recommendations": json.loads(row["recommendations_json"]),
-                "views": int(row["views"]),
-                "created_at": row["created_at"],
             }
         )
 

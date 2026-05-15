@@ -342,21 +342,6 @@ button,
   box-shadow: none;
 }
 
-.inline-link,
-.inline-copy {
-  display: inline-flex;
-  align-items: center;
-  border-radius: 999px;
-  margin-left: 8px;
-  padding: 7px 11px;
-  background: rgba(14, 165, 233, 0.14);
-  color: #075985;
-  font-size: 14px;
-  font-weight: 800;
-  text-decoration: none;
-  box-shadow: none;
-}
-
 @media (max-width: 640px) {
   .search-row {
     grid-template-columns: 1fr;
