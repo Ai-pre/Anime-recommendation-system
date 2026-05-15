@@ -58,20 +58,13 @@ async function searchAnime() {
 function renderRecommendations(items, shareUrl) {
   preview.innerHTML = "";
   const fullUrl = `${location.origin}${shareUrl}`;
-  const linkCard = document.createElement("article");
-  linkCard.className = "card share-card";
-  linkCard.innerHTML = `
-    <div class="rank">공유</div>
-    <h3>공유 링크 생성 완료</h3>
-    <p class="share-url">${fullUrl}</p>
-    <div class="meta">
-      <span>조회수 기록 중</span>
-      <button class="copy-button" type="button">링크 복사</button>
-    </div>
+  statusEl.innerHTML = `
+    추천 완료.
+    <a class="inline-link" href="${shareUrl}">공유 페이지 열기</a>
+    <button class="inline-copy" type="button">링크 복사</button>
   `;
-  const copyButton = linkCard.querySelector(".copy-button");
-  copyButton.addEventListener("click", async (event) => {
-    event.stopPropagation();
+  const copyButton = statusEl.querySelector(".inline-copy");
+  copyButton.addEventListener("click", async () => {
     try {
       await navigator.clipboard.writeText(fullUrl);
       copyButton.textContent = "복사 완료";
@@ -79,10 +72,6 @@ function renderRecommendations(items, shareUrl) {
       copyButton.textContent = "복사 실패";
     }
   });
-  linkCard.addEventListener("click", () => {
-    location.href = shareUrl;
-  });
-  preview.appendChild(linkCard);
 
   items.forEach((item, idx) => {
     const card = document.createElement("article");
@@ -122,7 +111,6 @@ async function makeRecommendation() {
     statusEl.textContent = data.error || "추천 생성 실패";
     return;
   }
-  statusEl.textContent = "완료. 첫 카드를 누르면 공유 페이지로 이동합니다.";
   renderRecommendations(data.recommendations, data.share_url);
 }
 

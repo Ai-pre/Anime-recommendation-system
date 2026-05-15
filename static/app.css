@@ -313,16 +313,6 @@ button,
   min-height: 220px;
 }
 
-.share-card {
-  cursor: pointer;
-  overflow: hidden;
-}
-
-.share-url {
-  overflow-wrap: anywhere;
-  word-break: break-word;
-}
-
 .card h3 {
   margin-top: 18px;
 }
@@ -349,6 +339,21 @@ button,
   background: rgba(14, 165, 233, 0.12);
   color: var(--ink);
   font-size: 12px;
+  box-shadow: none;
+}
+
+.inline-link,
+.inline-copy {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  margin-left: 8px;
+  padding: 7px 11px;
+  background: rgba(14, 165, 233, 0.14);
+  color: #075985;
+  font-size: 14px;
+  font-weight: 800;
+  text-decoration: none;
   box-shadow: none;
 }
 
