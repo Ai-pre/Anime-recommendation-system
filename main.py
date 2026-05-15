@@ -4,6 +4,7 @@ import argparse
 from pathlib import Path
 
 from anime_recommender import AnimeRecommender, ProjectPaths
+from anime_recommender.content_similarity import similar_anime_from_features
 from anime_recommender.io import file_size_mb, is_lfs_pointer
 from anime_recommender.training import train_full_pipeline, train_meta_from_ready
 
@@ -66,9 +67,7 @@ def cmd_recommend_user(args) -> None:
 
 
 def cmd_similar(args) -> None:
-    recommender = AnimeRecommender(make_paths(args.root))
-    print("Model info:", recommender.model_info())
-    result = recommender.similar_anime(args.title, top_n=args.top_n)
+    result = similar_anime_from_features(make_paths(args.root), args.title, top_n=args.top_n)
     print_frame(result)
 
 

@@ -82,6 +82,8 @@ python main.py recommend-user --user-id 116169 --top-n 10
 python main.py meta-similar --title "Koe no Katachi" --top-n 10
 ```
 
+`similar` is the lightweight content-similarity command. It does not load the multi-GB model files, so it is the safest first smoke test on a server.
+
 Train only the meta learner from the precomputed `meta_train_ready.csv`:
 
 ```bash
