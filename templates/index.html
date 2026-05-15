@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Anime Taste Radar</title>
+  <meta property="og:title" content="Anime Taste Radar">
+  <meta property="og:description" content="Create a shareable anime recommendation page from titles you like.">
+  <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <p class="eyebrow">Content-Based Anime Recommender</p>
+      <h1>Build your anime taste radar.</h1>
+      <p class="lead">Pick a few anime you like. The site uses content similarity across genres, studios, type, source, rating, and popularity to create a shareable recommendation page.</p>
+    </section>
+
+    <section class="composer panel">
+      <div class="search-row">
+        <input id="searchInput" autocomplete="off" placeholder="Try Naruto, Koe no Katachi, Made in Abyss">
+        <button id="searchButton">Search</button>
+      </div>
+      <div id="searchResults" class="search-results"></div>
+      <div class="selected-wrap">
+        <h2>Your watched or liked anime</h2>
+        <div id="selectedList" class="chips empty">No anime selected yet.</div>
+      </div>
+      <div class="actions">
+        <label>Minimum members <input id="minMembers" type="number" value="5000" min="0" step="1000"></label>
+        <label>Recommendation count <input id="topN" type="number" value="12" min="3" max="30"></label>
+        <button id="recommendButton" class="primary">Create share page</button>
+      </div>
+      <p id="status" class="status"></p>
+    </section>
+
+    <section id="preview" class="preview"></section>
+  </main>
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

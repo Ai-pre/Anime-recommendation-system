@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Anime Taste Radar Result</title>
+  <meta property="og:title" content="Anime Taste Radar Result">
+  <meta property="og:description" content="A shareable anime recommendation page generated from watched and liked titles.">
+  <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
+</head>
+<body>
+  <main class="shell">
+    <section class="hero compact">
+      <p class="eyebrow">Shared Taste Page</p>
+      <h1>Your anime taste radar result</h1>
+      <p class="lead">Views {{ views }} · Share ID {{ slug }}</p>
+      <a class="ghost-link" href="/">Create another</a>
+    </section>
+
+    <section class="panel">
+      <h2>Selected anime</h2>
+      <div class="chips">
+        {% for item in selected %}
+          <span class="chip">{{ item.title }}</span>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="grid">
+      {% for item in recommendations %}
+      <article class="card">
+        <div class="rank">#{{ loop.index }}</div>
+        <h3>{{ item.title }}</h3>
+        <p>{{ item.genres }}</p>
+        <div class="meta">
+          <span>{{ item.type }}</span>
+          <span>Score {{ item.score }}</span>
+          <span>Match {{ "%.1f"|format(item.taste_score * 100) }}%</span>
+        </div>
+      </article>
+      {% endfor %}
+    </section>
+  </main>
+</body>
+</html>

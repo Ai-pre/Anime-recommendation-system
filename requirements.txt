@@ -13,3 +13,5 @@ shap
 joblib
 jupyter
 ipykernel
+Flask
+gunicorn

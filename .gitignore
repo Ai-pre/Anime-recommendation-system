@@ -10,6 +10,8 @@ env/
 
 # Training outputs
 catboost_info/
+artifacts/*.sqlite3
+artifacts/*.sqlite3-*
 models/*.pkl
 models/*.joblib
 models/*.h5

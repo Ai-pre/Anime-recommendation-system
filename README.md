@@ -101,6 +101,22 @@ python main.py visualize-3d --output artifacts/anime_tsne_3d.html
 python main.py visualize-3d --user-id 116169 --output artifacts/user_116169_tsne_3d.html
 ```
 
+## Web App
+
+Run the shareable web version:
+
+```bash
+python app.py --host 0.0.0.0 --port 8000
+```
+
+Open `http://SERVER_IP:8000`. Users can search and select anime titles, create a content-based recommendation page, and share the generated `/r/<slug>` URL. View counts are stored in `artifacts/recommendation_pages.sqlite3`.
+
+For a production-style process:
+
+```bash
+gunicorn -w 1 -b 0.0.0.0:8000 'anime_recommender.web:create_app()'
+```
+
 Train only the meta learner from the precomputed `meta_train_ready.csv`:
 
 ```bash
