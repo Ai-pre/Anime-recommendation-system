@@ -13,6 +13,7 @@ catboost_info/
 artifacts/*.sqlite3
 artifacts/*.sqlite3-*
 artifacts/*.html
+artifacts/*.log
 models/*.pkl
 models/*.joblib
 models/*.h5
