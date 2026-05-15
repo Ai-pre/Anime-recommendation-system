@@ -194,6 +194,20 @@ button,
   background: rgba(255, 255, 255, 0.58);
 }
 
+.map-panel {
+  overflow: hidden;
+  padding: 10px;
+}
+
+.map-frame {
+  display: block;
+  width: 100%;
+  height: min(760px, 78vh);
+  border: 0;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.7);
+}
+
 .search-results,
 .preview,
 .grid {

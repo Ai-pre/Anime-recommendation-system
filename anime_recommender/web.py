@@ -181,6 +181,12 @@ def create_app(root: str | Path = ".") -> Flask:
     def anime_map():
         if not map_path.exists():
             return render_template("map_missing.html"), 404
+        return render_template("map.html")
+
+    @app.get("/map/embed")
+    def anime_map_embed():
+        if not map_path.exists():
+            return render_template("map_missing.html"), 404
         return send_file(map_path)
 
     @app.get("/api/search")
