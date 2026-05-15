@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import re
+import sqlite3
 from pathlib import Path
 
 import numpy as np
@@ -167,15 +168,34 @@ class ContentTasteRecommender:
         return payload
 
 
+def _increment_counter(db_path: Path, name: str) -> int:
+    db_path.parent.mkdir(parents=True, exist_ok=True)
+    with sqlite3.connect(db_path) as conn:
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS site_counters (
+                name TEXT PRIMARY KEY,
+                value INTEGER NOT NULL DEFAULT 0
+            )
+            """
+        )
+        conn.execute("INSERT OR IGNORE INTO site_counters (name, value) VALUES (?, 0)", (name,))
+        conn.execute("UPDATE site_counters SET value = value + 1 WHERE name = ?", (name,))
+        row = conn.execute("SELECT value FROM site_counters WHERE name = ?", (name,)).fetchone()
+    return int(row[0])
+
+
 def create_app(root: str | Path = ".") -> Flask:
     paths = ProjectPaths(Path(root))
     app = Flask(__name__, template_folder="../templates", static_folder="../static")
     recommender = ContentTasteRecommender(paths)
+    stats_db_path = paths.artifacts_dir / "site_counters.sqlite3"
     map_path = paths.artifacts_dir / "anime_tsne_3d.html"
 
     @app.get("/")
     def index():
-        return render_template("index.html")
+        visit_count = _increment_counter(stats_db_path, "home_views")
+        return render_template("index.html", visit_count=visit_count)
 
     @app.get("/map")
     def anime_map():
