@@ -23,6 +23,7 @@ class AnimeRecommender:
         self.svd_model = None
         self.meta_model = None
         self.item_sim_matrix = None
+        self.similarity_source = None
         self.malid_to_idx: dict[int, int] = {}
         self.idx_to_malid: dict[int, int] = {}
         self._anime_df: pd.DataFrame | None = None
@@ -72,6 +73,8 @@ class AnimeRecommender:
             self.malid_to_idx = {int(k): int(v) for k, v in self.meta_package.get("malid_to_idx", {}).items()}
             self.idx_to_malid = {int(k): int(v) for k, v in self.meta_package.get("idx_to_malid", {}).items()}
             self.item_sim_matrix = extract_similarity_matrix(self.meta_package)
+            if self.item_sim_matrix is not None:
+                self.similarity_source = "meta_model.pkl"
 
         if not self.malid_to_idx or not self.idx_to_malid:
             meta_ids = pd.read_csv(self.paths.meta_preprocessed_csv, usecols=["MAL_ID"])["MAL_ID"].astype(int).tolist()
@@ -80,6 +83,8 @@ class AnimeRecommender:
 
         if self.item_sim_matrix is None and self.paths.item_similarity_pickle.exists():
             self.item_sim_matrix = extract_similarity_matrix(load_pickle(self.paths.item_similarity_pickle))
+            if self.item_sim_matrix is not None:
+                self.similarity_source = "item_sim_matrix_all.pkl"
 
     def model_info(self) -> dict[str, object]:
         model_type = "Unknown"
@@ -92,13 +97,14 @@ class AnimeRecommender:
             "rmse": rmse,
             "anime_count": len(self.malid_to_idx),
             "has_item_similarity": self.item_sim_matrix is not None,
+            "similarity_source": self.similarity_source,
         }
 
     def _require_similarity(self) -> None:
         if self.item_sim_matrix is None:
             raise RuntimeError(
-                "Item similarity matrix was not found. Put item_sim_matrix_all.pkl in models/ "
-                "or use a meta_model.pkl package that contains item_sim_matrix."
+                "Item similarity matrix was not found. Use a meta_model.pkl package that contains "
+                "item_sim_matrix, or put item_sim_matrix_all.pkl in models/ as a fallback."
             )
 
     def get_cb_scores_for_user(self, user_id: int, like_threshold: float = 8.0, top_k_neighbors: int = 30):

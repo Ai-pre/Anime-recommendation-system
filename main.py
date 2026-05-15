@@ -30,9 +30,11 @@ def cmd_check(args) -> None:
         paths.meta_train_ready_csv,
         paths.encoder_pickle,
     ]
-    models = [
+    required_models = [
         paths.svd_model_pickle,
         paths.meta_model_pickle,
+    ]
+    optional_models = [
         paths.item_similarity_pickle,
     ]
 
@@ -46,12 +48,16 @@ def cmd_check(args) -> None:
             print(f"  MISSING {path.relative_to(paths.root)}")
 
     print("\nModel files:")
-    for path in models:
+    for path in required_models:
         if path.exists():
             print(f"  OK      {path.relative_to(paths.root)}  {file_size_mb(path):.1f} MB")
         else:
-            optional = " (optional if item_sim_matrix is inside meta_model.pkl)" if path == paths.item_similarity_pickle else ""
-            print(f"  MISSING {path.relative_to(paths.root)}{optional}")
+            print(f"  MISSING {path.relative_to(paths.root)}")
+    for path in optional_models:
+        if path.exists():
+            print(f"  OPTIONAL {path.relative_to(paths.root)}  {file_size_mb(path):.1f} MB")
+        else:
+            print(f"  OPTIONAL {path.relative_to(paths.root)}  not present")
 
 
 def cmd_recommend_user(args) -> None:

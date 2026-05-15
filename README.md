@@ -49,10 +49,9 @@ The trained model files from the local `models/` directory are intentionally exc
 ```text
 models/svd_model.pkl
 models/meta_model.pkl
-models/item_sim_matrix_all.pkl
 ```
 
-`item_sim_matrix_all.pkl` is optional when `meta_model.pkl` already contains `item_sim_matrix`.
+Normal hybrid inference uses `svd_model.pkl` and `meta_model.pkl`. The current `meta_model.pkl` package already contains the content-based `item_sim_matrix`, so `models/item_sim_matrix_all.pkl` is only an optional fallback/debug artifact.
 
 ## Setup
 
@@ -83,6 +82,8 @@ python main.py meta-similar --title "Koe no Katachi" --top-n 10
 ```
 
 `similar` is the lightweight content-similarity command. It does not load the multi-GB model files, so it is the safest first smoke test on a server.
+
+`recommend-user` is the main hybrid recommender. It loads `svd_model.pkl` for CF scores and `meta_model.pkl` for the LightGBM-style meta learner plus the content-based similarity matrix.
 
 Train only the meta learner from the precomputed `meta_train_ready.csv`:
 
