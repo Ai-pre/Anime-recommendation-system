@@ -70,8 +70,16 @@ class ProjectPaths:
         return self.models_dir / "meta_model.pkl"
 
     @property
+    def meta_model_core_pickle(self) -> Path:
+        return self.models_dir / "meta_model_core.pkl"
+
+    @property
     def item_similarity_pickle(self) -> Path:
         return self.models_dir / "item_sim_matrix_all.pkl"
+
+    @property
+    def item_similarity_npy(self) -> Path:
+        return self.models_dir / "item_sim_matrix.float32.npy"
 
     @property
     def best_meta_model_pickle(self) -> Path:

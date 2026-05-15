@@ -53,6 +53,14 @@ models/meta_model.pkl
 
 Normal hybrid inference uses `svd_model.pkl` and `meta_model.pkl`. The current `meta_model.pkl` package already contains the content-based `item_sim_matrix`, so `models/item_sim_matrix_all.pkl` is only an optional fallback/debug artifact.
 
+For memory-friendly server inference, run:
+
+```bash
+python main.py optimize-models
+```
+
+This creates `models/meta_model_core.pkl` and `models/item_sim_matrix.float32.npy`. The CLI will automatically prefer these optimized files when present.
+
 ## Setup
 
 ```bash

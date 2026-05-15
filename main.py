@@ -6,6 +6,7 @@ from pathlib import Path
 from anime_recommender import AnimeRecommender, ProjectPaths
 from anime_recommender.content_similarity import similar_anime_from_features
 from anime_recommender.io import file_size_mb, is_lfs_pointer
+from anime_recommender.optimize import optimize_meta_model
 from anime_recommender.training import train_full_pipeline, train_meta_from_ready
 
 
@@ -35,6 +36,8 @@ def cmd_check(args) -> None:
         paths.meta_model_pickle,
     ]
     optional_models = [
+        paths.meta_model_core_pickle,
+        paths.item_similarity_npy,
         paths.item_similarity_pickle,
     ]
 
@@ -106,6 +109,13 @@ def cmd_train_full(args) -> None:
     print("\nSaved full pipeline artifacts to models/ and data/processed/")
 
 
+def cmd_optimize_models(args) -> None:
+    outputs = optimize_meta_model(make_paths(args.root))
+    print("Optimized model artifacts:")
+    for name, path in outputs.items():
+        print(f"  {name}: {path}")
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Anime recommendation training and inference CLI")
     parser.add_argument("--root", default=".", help="Project root. Default: current directory")
@@ -143,6 +153,9 @@ def build_parser() -> argparse.ArgumentParser:
     train_full.add_argument("--top-k-neighbors", type=int, default=30)
     train_full.add_argument("--random-state", type=int, default=42)
     train_full.set_defaults(func=cmd_train_full)
+
+    optimize = sub.add_parser("optimize-models", help="Split meta_model.pkl for memory-friendly inference")
+    optimize.set_defaults(func=cmd_optimize_models)
 
     return parser
 

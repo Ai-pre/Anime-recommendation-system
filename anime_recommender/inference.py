@@ -60,11 +60,16 @@ class AnimeRecommender:
     def load_models(self) -> None:
         if not self.paths.svd_model_pickle.exists():
             raise FileNotFoundError(f"Missing SVD model: {self.paths.svd_model_pickle}")
-        if not self.paths.meta_model_pickle.exists():
+        meta_path = (
+            self.paths.meta_model_core_pickle
+            if self.paths.meta_model_core_pickle.exists()
+            else self.paths.meta_model_pickle
+        )
+        if not meta_path.exists():
             raise FileNotFoundError(f"Missing meta model: {self.paths.meta_model_pickle}")
 
         self.svd_package = load_pickle(self.paths.svd_model_pickle)
-        self.meta_package = load_pickle(self.paths.meta_model_pickle)
+        self.meta_package = load_pickle(meta_path)
 
         self.svd_model = unwrap_model(self.svd_package)
         self.meta_model = unwrap_model(self.meta_package)
@@ -74,12 +79,16 @@ class AnimeRecommender:
             self.idx_to_malid = {int(k): int(v) for k, v in self.meta_package.get("idx_to_malid", {}).items()}
             self.item_sim_matrix = extract_similarity_matrix(self.meta_package)
             if self.item_sim_matrix is not None:
-                self.similarity_source = "meta_model.pkl"
+                self.similarity_source = meta_path.name
 
         if not self.malid_to_idx or not self.idx_to_malid:
             meta_ids = pd.read_csv(self.paths.meta_preprocessed_csv, usecols=["MAL_ID"])["MAL_ID"].astype(int).tolist()
             self.malid_to_idx = {anime_id: idx for idx, anime_id in enumerate(meta_ids)}
             self.idx_to_malid = {idx: anime_id for anime_id, idx in self.malid_to_idx.items()}
+
+        if self.item_sim_matrix is None and self.paths.item_similarity_npy.exists():
+            self.item_sim_matrix = np.load(self.paths.item_similarity_npy, mmap_mode="r")
+            self.similarity_source = self.paths.item_similarity_npy.name
 
         if self.item_sim_matrix is None and self.paths.item_similarity_pickle.exists():
             self.item_sim_matrix = extract_similarity_matrix(load_pickle(self.paths.item_similarity_pickle))
@@ -104,12 +113,25 @@ class AnimeRecommender:
         if self.item_sim_matrix is None:
             raise RuntimeError(
                 "Item similarity matrix was not found. Use a meta_model.pkl package that contains "
-                "item_sim_matrix, or put item_sim_matrix_all.pkl in models/ as a fallback."
+                "item_sim_matrix, run `python main.py optimize-models`, or put "
+                "item_sim_matrix_all.pkl in models/ as a fallback."
             )
+
+    def get_user_history(self, user_id: int) -> pd.DataFrame:
+        chunks = pd.read_csv(
+            self.paths.rating_csv,
+            usecols=["user_id", "anime_id", "rating"],
+            chunksize=1_000_000,
+        )
+        parts = [chunk[chunk["user_id"] == user_id] for chunk in chunks]
+        if not parts:
+            return pd.DataFrame(columns=["user_id", "anime_id", "rating"])
+        history = pd.concat(parts, ignore_index=True)
+        return history[history["rating"] > 0]
 
     def get_cb_scores_for_user(self, user_id: int, like_threshold: float = 8.0, top_k_neighbors: int = 30):
         self._require_similarity()
-        user_ratings = self.ratings_df[self.ratings_df["user_id"] == user_id]
+        user_ratings = self.get_user_history(user_id)
         liked_anime = user_ratings[user_ratings["rating"] >= like_threshold]["anime_id"].values
         liked_idx = [self.malid_to_idx[int(anime_id)] for anime_id in liked_anime if int(anime_id) in self.malid_to_idx]
         if not liked_idx:
@@ -140,7 +162,7 @@ class AnimeRecommender:
         like_threshold: float = 8.0,
         top_k_neighbors: int = 30,
     ) -> pd.DataFrame:
-        user_history = self.ratings_df[self.ratings_df["user_id"] == user_id]
+        user_history = self.get_user_history(user_id)
         if user_history.empty:
             raise ValueError(f"User {user_id} was not found in rating_complete.csv.")
 
