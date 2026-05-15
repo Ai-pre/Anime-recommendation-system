@@ -8,6 +8,7 @@ import pandas as pd
 
 from .config import ProjectPaths
 from .io import extract_similarity_matrix, load_pickle, unwrap_model
+from .svd_light import LightweightSVD
 
 
 @dataclass
@@ -19,6 +20,7 @@ class AnimeRecommender:
     def __post_init__(self) -> None:
         self.paths = ProjectPaths(self.paths.root if isinstance(self.paths, ProjectPaths) else self.paths)
         self.svd_package = None
+        self.svd_source = None
         self.meta_package = None
         self.svd_model = None
         self.meta_model = None
@@ -58,7 +60,8 @@ class AnimeRecommender:
         return self._anime_lookup
 
     def load_models(self) -> None:
-        if not self.paths.svd_model_pickle.exists():
+        svd_path = self.paths.svd_light_pickle if self.paths.svd_light_pickle.exists() else self.paths.svd_model_pickle
+        if not svd_path.exists():
             raise FileNotFoundError(f"Missing SVD model: {self.paths.svd_model_pickle}")
         meta_path = (
             self.paths.meta_model_core_pickle
@@ -68,10 +71,14 @@ class AnimeRecommender:
         if not meta_path.exists():
             raise FileNotFoundError(f"Missing meta model: {self.paths.meta_model_pickle}")
 
-        self.svd_package = load_pickle(self.paths.svd_model_pickle)
+        self.svd_package = load_pickle(svd_path)
         self.meta_package = load_pickle(meta_path)
 
-        self.svd_model = unwrap_model(self.svd_package)
+        if svd_path == self.paths.svd_light_pickle:
+            self.svd_model = LightweightSVD.from_dict(self.svd_package)
+        else:
+            self.svd_model = unwrap_model(self.svd_package)
+        self.svd_source = svd_path.name
         self.meta_model = unwrap_model(self.meta_package)
 
         if isinstance(self.meta_package, dict):
@@ -107,6 +114,7 @@ class AnimeRecommender:
             "anime_count": len(self.malid_to_idx),
             "has_item_similarity": self.item_sim_matrix is not None,
             "similarity_source": self.similarity_source,
+            "svd_source": self.svd_source,
         }
 
     def _require_similarity(self) -> None:
@@ -155,6 +163,11 @@ class AnimeRecommender:
             pred = self.meta_model.predict(features.values)
         return float(np.clip(pred[0], 1.0, 10.0))
 
+    def _predict_cf(self, user_id: int, anime_id: int) -> float:
+        if isinstance(self.svd_model, LightweightSVD):
+            return self.svd_model.predict_est(user_id, anime_id)
+        return float(self.svd_model.predict(user_id, anime_id).est)
+
     def recommend_for_user(
         self,
         user_id: int,
@@ -179,7 +192,7 @@ class AnimeRecommender:
 
         scores = []
         for anime_id in candidates:
-            cf = float(self.svd_model.predict(user_id, anime_id).est)
+            cf = self._predict_cf(user_id, anime_id)
             cb = float(cb_vector[self.malid_to_idx[anime_id]])
             pred = self._predict_meta(cf, cb)
             scores.append((anime_id, pred, cf, cb))

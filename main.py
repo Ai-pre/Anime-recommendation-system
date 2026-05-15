@@ -6,7 +6,7 @@ from pathlib import Path
 from anime_recommender import AnimeRecommender, ProjectPaths
 from anime_recommender.content_similarity import similar_anime_from_features
 from anime_recommender.io import file_size_mb, is_lfs_pointer
-from anime_recommender.optimize import optimize_meta_model
+from anime_recommender.optimize import optimize_meta_model, optimize_svd_model
 from anime_recommender.training import train_full_pipeline, train_meta_from_ready
 
 
@@ -32,10 +32,11 @@ def cmd_check(args) -> None:
         paths.encoder_pickle,
     ]
     required_models = [
-        paths.svd_model_pickle,
         paths.meta_model_pickle,
     ]
     optional_models = [
+        paths.svd_light_pickle,
+        paths.svd_model_pickle,
         paths.meta_model_core_pickle,
         paths.item_similarity_npy,
         paths.item_similarity_pickle,
@@ -110,7 +111,10 @@ def cmd_train_full(args) -> None:
 
 
 def cmd_optimize_models(args) -> None:
-    outputs = optimize_meta_model(make_paths(args.root))
+    paths = make_paths(args.root)
+    outputs = {}
+    outputs.update(optimize_meta_model(paths))
+    outputs.update(optimize_svd_model(paths))
     print("Optimized model artifacts:")
     for name, path in outputs.items():
         print(f"  {name}: {path}")

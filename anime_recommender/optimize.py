@@ -4,6 +4,7 @@ import numpy as np
 
 from .config import ProjectPaths
 from .io import extract_similarity_matrix, load_pickle, save_pickle
+from .svd_light import extract_lightweight_svd
 
 
 def optimize_meta_model(paths: ProjectPaths) -> dict[str, str]:
@@ -40,3 +41,17 @@ def optimize_meta_model(paths: ProjectPaths) -> dict[str, str]:
         "meta_model_core": str(paths.meta_model_core_pickle),
         "item_similarity_npy": str(paths.item_similarity_npy),
     }
+
+
+def optimize_svd_model(paths: ProjectPaths) -> dict[str, str]:
+    """Create a lightweight SVD predictor from models/svd_model.pkl."""
+
+    if paths.svd_light_pickle.exists():
+        return {"svd_light": str(paths.svd_light_pickle)}
+
+    if not paths.svd_model_pickle.exists():
+        raise FileNotFoundError(f"Missing SVD model: {paths.svd_model_pickle}")
+    package = load_pickle(paths.svd_model_pickle)
+    light_payload = extract_lightweight_svd(package)
+    save_pickle(light_payload, paths.svd_light_pickle)
+    return {"svd_light": str(paths.svd_light_pickle)}

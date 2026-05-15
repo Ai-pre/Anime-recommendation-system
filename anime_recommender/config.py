@@ -66,6 +66,10 @@ class ProjectPaths:
         return self.models_dir / "svd_model.pkl"
 
     @property
+    def svd_light_pickle(self) -> Path:
+        return self.models_dir / "svd_light.pkl"
+
+    @property
     def meta_model_pickle(self) -> Path:
         return self.models_dir / "meta_model.pkl"
 

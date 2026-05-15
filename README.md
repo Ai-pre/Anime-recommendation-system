@@ -60,6 +60,7 @@ python main.py optimize-models
 ```
 
 This creates `models/meta_model_core.pkl` and `models/item_sim_matrix.float32.npy`. The CLI will automatically prefer these optimized files when present.
+It also creates `models/svd_light.pkl`, which avoids loading the full Surprise trainset during inference.
 
 ## Setup
 
@@ -91,7 +92,7 @@ python main.py meta-similar --title "Koe no Katachi" --top-n 10
 
 `similar` is the lightweight content-similarity command. It does not load the multi-GB model files, so it is the safest first smoke test on a server.
 
-`recommend-user` is the main hybrid recommender. It loads `svd_model.pkl` for CF scores and `meta_model.pkl` for the LightGBM-style meta learner plus the content-based similarity matrix.
+`recommend-user` is the main hybrid recommender. It uses SVD for CF scores and the meta learner for final ranking. When optimized files are present, it prefers `svd_light.pkl`, `meta_model_core.pkl`, and `item_sim_matrix.float32.npy` to reduce memory use.
 
 Train only the meta learner from the precomputed `meta_train_ready.csv`:
 
