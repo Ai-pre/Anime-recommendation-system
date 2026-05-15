@@ -123,6 +123,14 @@ For a production-style process:
 gunicorn -w 1 -b 0.0.0.0:8000 'anime_recommender.web:create_app()'
 ```
 
+To keep the site alive after disconnecting VS Code or SSH, run it in `tmux`:
+
+```bash
+tmux new-session -d -s anime_web 'cd ~/animation_recommendation && gunicorn -w 1 -b 0.0.0.0:8000 "anime_recommender.web:create_app()"'
+```
+
+If `http://SERVER_IP:8000` does not open from another device, the server is listening correctly but the public network/firewall is blocking port 8000. In that case, either open TCP 8000 or use a tunnel service such as Cloudflare Tunnel or ngrok.
+
 Train only the meta learner from the precomputed `meta_train_ready.csv`:
 
 ```bash

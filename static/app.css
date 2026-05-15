@@ -246,10 +246,18 @@ button,
 .actions label {
   display: grid;
   gap: 6px;
-  min-width: 140px;
+  max-width: 360px;
+  min-width: 180px;
   color: rgba(24, 22, 17, 0.68);
   font-size: 13px;
   font-weight: 800;
+}
+
+.field-help {
+  color: rgba(24, 22, 17, 0.5);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.35;
 }
 
 .actions .toggle {
