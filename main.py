@@ -8,6 +8,7 @@ from anime_recommender.content_similarity import similar_anime_from_features
 from anime_recommender.io import file_size_mb, is_lfs_pointer
 from anime_recommender.optimize import optimize_meta_model, optimize_svd_model
 from anime_recommender.training import train_full_pipeline, train_meta_from_ready
+from anime_recommender.visualization import build_3d_visualization
 
 
 def make_paths(root: str | Path) -> ProjectPaths:
@@ -120,6 +121,19 @@ def cmd_optimize_models(args) -> None:
         print(f"  {name}: {path}")
 
 
+def cmd_visualize_3d(args) -> None:
+    output = build_3d_visualization(
+        make_paths(args.root),
+        output=Path(args.output) if args.output else None,
+        sample_size=args.sample_size,
+        random_state=args.random_state,
+        perplexity=args.perplexity,
+        user_id=args.user_id,
+        like_threshold=args.like_threshold,
+    )
+    print(f"Saved 3D visualization: {output}")
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Anime recommendation training and inference CLI")
     parser.add_argument("--root", default=".", help="Project root. Default: current directory")
@@ -160,6 +174,15 @@ def build_parser() -> argparse.ArgumentParser:
 
     optimize = sub.add_parser("optimize-models", help="Split meta_model.pkl for memory-friendly inference")
     optimize.set_defaults(func=cmd_optimize_models)
+
+    vis = sub.add_parser("visualize-3d", help="Create an interactive 3D anime embedding HTML")
+    vis.add_argument("--output", default="artifacts/anime_tsne_3d.html")
+    vis.add_argument("--sample-size", type=int, default=6000)
+    vis.add_argument("--random-state", type=int, default=42)
+    vis.add_argument("--perplexity", type=float, default=30.0)
+    vis.add_argument("--user-id", type=int, default=None)
+    vis.add_argument("--like-threshold", type=float, default=8.0)
+    vis.set_defaults(func=cmd_visualize_3d)
 
     return parser
 

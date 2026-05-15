@@ -94,6 +94,13 @@ python main.py meta-similar --title "Koe no Katachi" --top-n 10
 
 `recommend-user` is the main hybrid recommender. It uses SVD for CF scores and the meta learner for final ranking. When optimized files are present, it prefers `svd_light.pkl`, `meta_model_core.pkl`, and `item_sim_matrix.float32.npy` to reduce memory use.
 
+Create an interactive 3D anime embedding map:
+
+```bash
+python main.py visualize-3d --output artifacts/anime_tsne_3d.html
+python main.py visualize-3d --user-id 116169 --output artifacts/user_116169_tsne_3d.html
+```
+
 Train only the meta learner from the precomputed `meta_train_ready.csv`:
 
 ```bash
