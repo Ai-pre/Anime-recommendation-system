@@ -220,25 +220,46 @@ h1 {
 }
 
 .tab-track {
-  display: flex;
-  width: 200%;
-  align-items: flex-start;
-  gap: 0;
-  transform: translateX(0);
-  transition: transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.tab-track.show-ratings {
-  transform: translateX(-50%);
+  position: relative;
+  width: 100%;
+  background: transparent;
 }
 
 .tab-panel {
   display: grid;
-  flex: 0 0 50%;
+  width: 100%;
   gap: 18px;
   min-width: 0;
   padding: 0;
   background: transparent;
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  transition:
+    opacity 220ms ease,
+    transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.tab-panel[data-side="left"] {
+  transform: translateX(-36px);
+}
+
+.tab-panel[data-side="right"] {
+  transform: translateX(36px);
+}
+
+.tab-panel:not(.active) {
+  position: absolute;
+  inset: 0;
+}
+
+.tab-panel.active {
+  position: relative;
+  opacity: 1;
+  pointer-events: auto;
+  visibility: visible;
+  transform: translateX(0);
 }
 
 .tab-panel > .preview {

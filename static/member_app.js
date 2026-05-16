@@ -9,7 +9,6 @@ const usernameLabel = $("#usernameLabel");
 const ratingStatus = $("#ratingStatus");
 const personalStatus = $("#personalStatus");
 const personalGrid = $("#personalGrid");
-const tabTrack = $("#tabTrack");
 const recommendTab = $("#recommendTab");
 const ratingTab = $("#ratingTab");
 const recommendTabButton = $("#recommendTabButton");
@@ -51,9 +50,12 @@ function showAuth(mode = "login") {
 
 function showTab(tabName) {
   const showingRatings = tabName === "ratings";
-  tabTrack.classList.toggle("show-ratings", showingRatings);
   recommendTabButton.classList.toggle("active", !showingRatings);
   ratingTabButton.classList.toggle("active", showingRatings);
+  recommendTab.dataset.side = showingRatings ? "left" : "center";
+  ratingTab.dataset.side = showingRatings ? "center" : "right";
+  recommendTab.classList.toggle("active", !showingRatings);
+  ratingTab.classList.toggle("active", showingRatings);
   recommendTab.setAttribute("aria-hidden", String(showingRatings));
   ratingTab.setAttribute("aria-hidden", String(!showingRatings));
   recommendTab.inert = showingRatings;
