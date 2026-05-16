@@ -255,6 +255,15 @@ h1 {
   margin-top: 0;
 }
 
+.member-page .panel,
+.member-page .result-item,
+.member-page .card,
+.member-page button,
+.member-page .ghost-link,
+.member-page .rank {
+  box-shadow: none;
+}
+
 .search-row {
   display: grid;
   grid-template-columns: 1fr auto;

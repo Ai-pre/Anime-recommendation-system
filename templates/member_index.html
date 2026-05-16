@@ -6,9 +6,9 @@
   <title>회원제 애니 추천</title>
   <meta property="og:title" content="회원제 애니 추천">
   <meta property="og:description" content="애니를 평가하면 개인 하이브리드 추천을 보여줍니다.">
-  <link rel="stylesheet" href="{{ url_for('static', filename='app.css', v='member-solid-bg-1') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='app.css', v='member-solid-bg-2') }}">
 </head>
-<body>
+<body class="member-page">
   <main class="shell">
     <section class="hero">
       <p class="eyebrow">애니메이션 추천 시스템 <span class="view-badge">조회수 {{ visit_count }}</span></p>
@@ -115,6 +115,6 @@
   <script>
     window.RATING_THRESHOLD = {{ threshold }};
   </script>
-  <script src="{{ url_for('static', filename='member_app.js', v='member-solid-bg-1') }}"></script>
+  <script src="{{ url_for('static', filename='member_app.js', v='member-solid-bg-2') }}"></script>
 </body>
 </html>
