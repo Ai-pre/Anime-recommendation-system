@@ -266,6 +266,18 @@ h1 {
   margin-top: 0;
 }
 
+.member-page .tab-panel > .panel {
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.member-page .tab-panel > .panel,
+.member-page .tab-panel > .preview {
+  padding-inline: 0;
+}
+
 .search-row {
   display: grid;
   grid-template-columns: 1fr auto;
