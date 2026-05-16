@@ -1,4 +1,7 @@
 # Anime Recommendation System
+<img width="883" height="749" alt="image" src="https://github.com/user-attachments/assets/9ff520c6-897a-44d7-b188-991eaa29a1af" />
+<img width="889" height="772" alt="image" src="https://github.com/user-attachments/assets/0be75c5c-b733-4ebb-afc9-58752b7a08ab" />
+
 
 Hybrid anime recommendation project combining collaborative filtering, content-based metadata features, and gradient-boosting meta learners.
 
