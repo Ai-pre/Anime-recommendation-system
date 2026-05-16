@@ -14,7 +14,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from .config import ProjectPaths
 from .io import load_pickle, unwrap_model
 from .svd_light import LightweightSVD
-from .web import BLOCKED_RATINGS, DEFAULT_ALLOWED_TYPES, ContentTasteRecommender
+from .web import BLOCKED_RATINGS, DEFAULT_ALLOWED_TYPES, ContentTasteRecommender, _increment_counter
 
 
 RATING_THRESHOLD = 10
@@ -236,6 +236,7 @@ def create_app(root: str | Path = ".") -> Flask:
     app.secret_key = os.environ.get("ANIME_MEMBER_SECRET", "dev-member-secret-change-me")
     recommender = MemberHybridRecommender(paths)
     db_path = paths.artifacts_dir / "member_site.sqlite3"
+    stats_db_path = paths.artifacts_dir / "site_counters.sqlite3"
     map_path = paths.artifacts_dir / "anime_tsne_3d.html"
 
     def current_user_id() -> int | None:
@@ -263,7 +264,8 @@ def create_app(root: str | Path = ".") -> Flask:
 
     @app.get("/")
     def index():
-        return render_template("member_index.html", threshold=RATING_THRESHOLD)
+        visit_count = _increment_counter(stats_db_path, "member_home_views")
+        return render_template("member_index.html", threshold=RATING_THRESHOLD, visit_count=visit_count)
 
     @app.get("/map")
     def anime_map():
