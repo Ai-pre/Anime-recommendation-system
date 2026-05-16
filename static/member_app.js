@@ -9,10 +9,20 @@ const usernameLabel = $("#usernameLabel");
 const ratingStatus = $("#ratingStatus");
 const personalStatus = $("#personalStatus");
 const personalGrid = $("#personalGrid");
-const searchInput = $("#searchInput");
-const searchResults = $("#searchResults");
+const recommendTab = $("#recommendTab");
+const ratingTab = $("#ratingTab");
+const recommendTabButton = $("#recommendTabButton");
+const ratingTabButton = $("#ratingTabButton");
+const contentSearchInput = $("#contentSearchInput");
+const contentSearchResults = $("#contentSearchResults");
+const contentSelectedList = $("#contentSelectedList");
+const contentStatus = $("#contentStatus");
+const contentPreview = $("#contentPreview");
+const ratingSearchInput = $("#ratingSearchInput");
+const ratingSearchResults = $("#ratingSearchResults");
 const ratingList = $("#ratingList");
 
+const selectedContentAnime = new Map();
 let currentUser = null;
 
 async function api(path, options = {}) {
@@ -38,6 +48,15 @@ function showAuth(mode = "login") {
   registerCard.classList.toggle("hidden", !showingRegister);
 }
 
+function showTab(tabName) {
+  const showingRatings = tabName === "ratings";
+  recommendTab.classList.toggle("hidden", showingRatings);
+  ratingTab.classList.toggle("hidden", !showingRatings);
+  recommendTabButton.classList.toggle("active", !showingRatings);
+  ratingTabButton.classList.toggle("active", showingRatings);
+  setStatus("");
+}
+
 function showApp(user) {
   currentUser = user;
   authPanel.classList.add("hidden");
@@ -53,6 +72,10 @@ function updateRatingStatus(user) {
     : `평가 ${user.rating_count}개 완료. ${remain}개 더 평가하면 개인 추천이 열립니다.`;
 }
 
+function animeMeta(item) {
+  return `${item.type} - 평점 ${item.score ?? "?"} - ${item.genres}`;
+}
+
 async function refreshMe() {
   const data = await api("/api/me");
   if (!data.authenticated) {
@@ -60,6 +83,7 @@ async function refreshMe() {
     return;
   }
   showApp(data.user);
+  showTab("recommend");
   await Promise.all([loadRatings(), loadPersonalRecommendations()]);
 }
 
@@ -69,6 +93,7 @@ async function login(username, password) {
     body: JSON.stringify({ username, password }),
   });
   showApp(data.user);
+  showTab("recommend");
   await Promise.all([loadRatings(), loadPersonalRecommendations()]);
 }
 
@@ -78,20 +103,100 @@ async function register(username, password) {
     body: JSON.stringify({ username, password }),
   });
   showApp(data.user);
+  showTab("recommend");
   await Promise.all([loadRatings(), loadPersonalRecommendations()]);
 }
 
 async function logout() {
   await api("/api/logout", { method: "POST", body: "{}" });
   currentUser = null;
+  selectedContentAnime.clear();
   showAuth("login");
-  searchResults.innerHTML = "";
+  ratingSearchResults.innerHTML = "";
   ratingList.innerHTML = "";
   personalGrid.innerHTML = "";
+  contentSearchResults.innerHTML = "";
+  contentPreview.innerHTML = "";
+  renderSelectedContent();
 }
 
-function animeMeta(item) {
-  return `${item.type} - 평점 ${item.score ?? "?"} - ${item.genres}`;
+function renderSelectedContent() {
+  contentSelectedList.innerHTML = "";
+  contentSelectedList.classList.toggle("empty", selectedContentAnime.size === 0);
+  if (selectedContentAnime.size === 0) {
+    contentSelectedList.textContent = "아직 선택한 애니가 없습니다.";
+    return;
+  }
+  for (const item of selectedContentAnime.values()) {
+    const chip = document.createElement("span");
+    chip.className = "chip";
+    chip.textContent = item.title;
+    const remove = document.createElement("button");
+    remove.textContent = "x";
+    remove.addEventListener("click", () => {
+      selectedContentAnime.delete(item.id);
+      renderSelectedContent();
+    });
+    chip.appendChild(remove);
+    contentSelectedList.appendChild(chip);
+  }
+}
+
+async function searchContentAnime() {
+  const query = contentSearchInput.value.trim();
+  contentSearchResults.innerHTML = "";
+  if (!query) return;
+  contentStatus.textContent = "검색 중...";
+  const data = await api(`/api/search?q=${encodeURIComponent(query)}`);
+  contentStatus.textContent = "";
+  for (const item of data.results) {
+    const button = document.createElement("button");
+    button.className = "result-item";
+    button.innerHTML = `<strong>${item.title}</strong><span>${animeMeta(item)}</span>`;
+    button.addEventListener("click", () => {
+      selectedContentAnime.set(item.id, item);
+      renderSelectedContent();
+    });
+    contentSearchResults.appendChild(button);
+  }
+}
+
+function renderContentRecommendations(items) {
+  contentPreview.innerHTML = "";
+  contentStatus.textContent = "추천 완료.";
+  items.forEach((item, index) => {
+    const card = document.createElement("article");
+    card.className = "card";
+    card.innerHTML = `
+      <div class="rank">#${index + 1}</div>
+      <h3>${item.title}</h3>
+      <p>${item.genres}</p>
+      <div class="meta">
+        <span>${item.type}</span>
+        <span>평점 ${item.score ?? "?"}</span>
+        <span>유사도 ${(item.taste_score * 100).toFixed(1)}%</span>
+      </div>
+    `;
+    contentPreview.appendChild(card);
+  });
+}
+
+async function makeContentRecommendation() {
+  if (selectedContentAnime.size === 0) {
+    contentStatus.textContent = "먼저 애니를 하나 이상 선택하세요.";
+    return;
+  }
+  contentStatus.textContent = "추천 계산 중...";
+  const data = await api("/api/recommend", {
+    method: "POST",
+    body: JSON.stringify({
+      anime_ids: [...selectedContentAnime.keys()],
+      min_members: Number($("#minMembers").value || 0),
+      top_n: Number($("#topN").value || 12),
+      avoid_same_series: $("#avoidSameSeries").checked,
+    }),
+  });
+  renderContentRecommendations(data.recommendations);
 }
 
 function ratingSelect(item) {
@@ -110,9 +215,9 @@ function ratingSelect(item) {
   `;
 }
 
-async function searchAnime() {
-  const query = searchInput.value.trim();
-  searchResults.innerHTML = "";
+async function searchRatingAnime() {
+  const query = ratingSearchInput.value.trim();
+  ratingSearchResults.innerHTML = "";
   if (!query) return;
   setStatus("검색 중...");
   const data = await api(`/api/search?q=${encodeURIComponent(query)}`);
@@ -133,7 +238,7 @@ async function searchAnime() {
       }
       await saveRating(item.id, Number(select.value));
     });
-    searchResults.appendChild(card);
+    ratingSearchResults.appendChild(card);
   }
 }
 
@@ -215,19 +320,41 @@ $("#registerButton").addEventListener("click", () => {
 });
 
 $("#showRegisterButton").addEventListener("click", () => showAuth("register"));
-
 $("#showLoginButton").addEventListener("click", () => showAuth("login"));
+$("#recommendTabButton").addEventListener("click", () => showTab("recommend"));
+$("#ratingTabButton").addEventListener("click", () => showTab("ratings"));
 
 $("#logoutButton").addEventListener("click", () => {
   logout().catch((error) => setStatus(error.message));
 });
 
-$("#searchButton").addEventListener("click", () => {
-  searchAnime().catch((error) => setStatus(error.message));
+$("#contentSearchButton").addEventListener("click", () => {
+  searchContentAnime().catch((error) => {
+    contentStatus.textContent = error.message;
+  });
 });
 
-searchInput.addEventListener("keydown", (event) => {
-  if (event.key === "Enter") searchAnime().catch((error) => setStatus(error.message));
+contentSearchInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    searchContentAnime().catch((error) => {
+      contentStatus.textContent = error.message;
+    });
+  }
 });
 
+$("#contentRecommendButton").addEventListener("click", () => {
+  makeContentRecommendation().catch((error) => {
+    contentStatus.textContent = error.message;
+  });
+});
+
+$("#ratingSearchButton").addEventListener("click", () => {
+  searchRatingAnime().catch((error) => setStatus(error.message));
+});
+
+ratingSearchInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") searchRatingAnime().catch((error) => setStatus(error.message));
+});
+
+renderSelectedContent();
 refreshMe().catch((error) => setStatus(error.message));

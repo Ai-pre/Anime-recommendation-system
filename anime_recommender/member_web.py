@@ -325,6 +325,24 @@ def create_app(root: str | Path = ".") -> Flask:
         query = request.args.get("q", "")
         return jsonify({"results": recommender.search(query)})
 
+    @app.post("/api/recommend")
+    def api_content_recommend():
+        payload = request.get_json(silent=True) or {}
+        anime_ids = payload.get("anime_ids") or []
+        top_n = int(payload.get("top_n") or DEFAULT_TOP_N)
+        min_members = int(payload.get("min_members") or DEFAULT_MIN_MEMBERS)
+        avoid_same_series = bool(payload.get("avoid_same_series", True))
+        try:
+            selected, recommendations = recommender.recommend(
+                anime_ids,
+                top_n=top_n,
+                min_members=min_members,
+                avoid_same_series=avoid_same_series,
+            )
+        except ValueError as exc:
+            return jsonify({"error": str(exc)}), 400
+        return jsonify({"selected": selected, "recommendations": recommendations})
+
     @app.get("/api/ratings")
     def api_ratings():
         user_id = require_user()

@@ -156,6 +156,10 @@ h1 {
   font-weight: 800;
 }
 
+.auth-switch:has(.text-link:only-child) {
+  gap: 0;
+}
+
 .text-link {
   padding: 0;
   border-radius: 0;
@@ -173,6 +177,26 @@ h1 {
 .member-bar {
   grid-template-columns: 1fr auto;
   margin-bottom: 18px;
+}
+
+.tab-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0 0 18px;
+}
+
+.tab-button {
+  border-radius: 999px;
+  padding: 12px 18px;
+  background: rgba(255, 255, 255, 0.58);
+  color: var(--muted);
+}
+
+.tab-button.active {
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+  color: #fff;
+  box-shadow: 0 18px 42px rgba(37, 99, 235, 0.28);
 }
 
 .search-row {

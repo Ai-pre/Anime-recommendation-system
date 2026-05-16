@@ -6,14 +6,13 @@
   <title>회원제 애니 추천</title>
   <meta property="og:title" content="회원제 애니 추천">
   <meta property="og:description" content="애니를 평가하면 개인 하이브리드 추천을 보여줍니다.">
-  <link rel="stylesheet" href="{{ url_for('static', filename='app.css', v='member-auth-1') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='app.css', v='member-tabs-1') }}">
 </head>
 <body>
   <main class="shell">
     <section class="hero">
-      <p class="eyebrow">회원제 하이브리드 추천</p>
+      <p class="eyebrow">애니메이션 추천 시스템</p>
       <h1>애니 좀 봐주세요</h1>
-      <p class="lead">애니를 10개 이상 평가하면 SVD와 콘텐츠 유사도를 섞어서 개인 추천을 보여줍니다.</p>
       <div class="hero-actions">
         <a class="ghost-link" href="{{ url_for('anime_map') }}">3D 지도 보기</a>
       </div>
@@ -27,7 +26,6 @@
           <input id="loginPassword" autocomplete="current-password" type="password" placeholder="비밀번호">
           <button id="loginButton" class="primary">로그인</button>
           <div class="auth-switch">
-            <span>처음이라면</span>
             <button id="showRegisterButton" class="text-link" type="button">회원가입</button>
           </div>
         </article>
@@ -55,24 +53,56 @@
         <button id="logoutButton">로그아웃</button>
       </section>
 
-      <section id="personalSection" class="panel">
-        <h2>나를 위한 하이브리드 추천</h2>
-        <p id="personalStatus" class="status"></p>
-        <div id="personalGrid" class="grid"></div>
+      <nav class="tab-bar" aria-label="추천 메뉴">
+        <button id="recommendTabButton" class="tab-button active" type="button">추천 보기</button>
+        <button id="ratingTabButton" class="tab-button" type="button">평가하기</button>
+      </nav>
+
+      <section id="recommendTab">
+        <section id="personalSection" class="panel">
+          <h2>나를 위한 하이브리드 추천</h2>
+          <p id="personalStatus" class="status"></p>
+          <div id="personalGrid" class="grid"></div>
+        </section>
+
+        <section class="composer panel">
+          <h2>콘텐츠 기반 추천</h2>
+          <div class="search-row">
+            <input id="contentSearchInput" autocomplete="off" placeholder="예: Naruto, Koe no Katachi, Made in Abyss">
+            <button id="contentSearchButton">검색</button>
+          </div>
+          <div id="contentSearchResults" class="search-results"></div>
+          <div class="selected-wrap">
+            <h2>내가 본 애니</h2>
+            <div id="contentSelectedList" class="chips empty">아직 선택한 애니가 없습니다.</div>
+          </div>
+          <div class="actions">
+            <label>시청자 수 <input id="minMembers" type="number" value="5000" min="0" step="1000"></label>
+            <label>추천 개수 <input id="topN" type="number" value="12" min="3" max="30"></label>
+            <label class="toggle"><input id="avoidSameSeries" type="checkbox" checked> 같은 시리즈 제외</label>
+            <button id="contentRecommendButton" class="primary">추천 만들기</button>
+          </div>
+          <p id="contentStatus" class="status"></p>
+        </section>
+
+        <section id="contentPreview" class="preview"></section>
       </section>
 
-      <section class="composer panel">
-        <div class="search-row">
-          <input id="searchInput" autocomplete="off" placeholder="예: Naruto, Koe no Katachi, Made in Abyss">
-          <button id="searchButton">검색</button>
-        </div>
-        <p class="status">검색한 애니에 1점부터 10점까지 평가해보세요.</p>
-        <div id="searchResults" class="search-results"></div>
-      </section>
+      <section id="ratingTab" class="hidden">
+        <section class="composer panel">
+          <h2>애니 평가하기</h2>
+          <div class="search-row">
+            <input id="ratingSearchInput" autocomplete="off" placeholder="예: Naruto, Koe no Katachi, Made in Abyss">
+            <button id="ratingSearchButton">검색</button>
+          </div>
+          <p class="status">검색한 애니에 1점부터 10점까지 평가해보세요.</p>
+          <div id="ratingSearchResults" class="search-results"></div>
+        </section>
 
-      <section class="panel">
-        <h2>내가 평가한 애니</h2>
-        <div id="ratingList" class="rating-list"></div>
+        <section class="panel">
+          <h2>내가 평가한 애니</h2>
+          <div id="ratingList" class="rating-list"></div>
+        </section>
       </section>
     </section>
 
@@ -81,6 +111,6 @@
   <script>
     window.RATING_THRESHOLD = {{ threshold }};
   </script>
-  <script src="{{ url_for('static', filename='member_app.js', v='member-auth-1') }}"></script>
+  <script src="{{ url_for('static', filename='member_app.js', v='member-tabs-1') }}"></script>
 </body>
 </html>
