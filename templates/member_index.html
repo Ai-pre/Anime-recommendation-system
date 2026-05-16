@@ -6,7 +6,7 @@
   <title>회원제 애니 추천</title>
   <meta property="og:title" content="회원제 애니 추천">
   <meta property="og:description" content="애니를 평가하면 개인 하이브리드 추천을 보여줍니다.">
-  <link rel="stylesheet" href="{{ url_for('static', filename='app.css', v='member-tabs-1') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='app.css', v='member-tabs-2') }}">
 </head>
 <body>
   <main class="shell">
@@ -56,9 +56,10 @@
       <nav class="tab-bar" aria-label="추천 메뉴">
         <button id="recommendTabButton" class="tab-button active" type="button">추천 보기</button>
         <button id="ratingTabButton" class="tab-button" type="button">평가하기</button>
+        <span id="tabIndicator" class="tab-indicator" aria-hidden="true"></span>
       </nav>
 
-      <section id="recommendTab">
+      <section id="recommendTab" class="tab-panel">
         <section id="personalSection" class="panel">
           <h2>나를 위한 하이브리드 추천</h2>
           <p id="personalStatus" class="status"></p>
@@ -88,7 +89,7 @@
         <section id="contentPreview" class="preview"></section>
       </section>
 
-      <section id="ratingTab" class="hidden">
+      <section id="ratingTab" class="tab-panel hidden">
         <section class="composer panel">
           <h2>애니 평가하기</h2>
           <div class="search-row">
@@ -111,6 +112,6 @@
   <script>
     window.RATING_THRESHOLD = {{ threshold }};
   </script>
-  <script src="{{ url_for('static', filename='member_app.js', v='member-tabs-1') }}"></script>
+  <script src="{{ url_for('static', filename='member_app.js', v='member-tabs-2') }}"></script>
 </body>
 </html>

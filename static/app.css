@@ -15,9 +15,14 @@
   box-sizing: border-box;
 }
 
+html {
+  scrollbar-gutter: stable;
+}
+
 body {
   margin: 0;
   min-height: 100vh;
+  overflow-y: scroll;
   color: var(--ink);
   font-family: "Space Grotesk", "Pretendard", "Noto Sans KR", sans-serif;
   background:
@@ -180,13 +185,23 @@ h1 {
 }
 
 .tab-bar {
+  position: relative;
   display: flex;
-  flex-wrap: wrap;
+  align-items: center;
   gap: 10px;
+  width: fit-content;
+  max-width: 100%;
   margin: 0 0 18px;
+  padding: 6px 6px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.42);
+  backdrop-filter: blur(14px);
 }
 
 .tab-button {
+  position: relative;
+  z-index: 1;
   border-radius: 999px;
   padding: 12px 18px;
   background: rgba(255, 255, 255, 0.58);
@@ -197,6 +212,27 @@ h1 {
   background: linear-gradient(135deg, var(--accent), var(--accent-strong));
   color: #fff;
   box-shadow: 0 18px 42px rgba(37, 99, 235, 0.28);
+}
+
+.tab-indicator {
+  position: absolute;
+  left: var(--tab-left, 6px);
+  bottom: 5px;
+  width: var(--tab-width, 84px);
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #67e8f9, #2563eb);
+  box-shadow: 0 8px 22px rgba(37, 99, 235, 0.32);
+  transition: left 240ms ease, width 240ms ease;
+}
+
+.tab-panel {
+  display: grid;
+  gap: 18px;
+}
+
+.tab-panel > .preview {
+  margin-top: 0;
 }
 
 .search-row {
@@ -522,5 +558,13 @@ button,
   .member-bar,
   .rating-row {
     grid-template-columns: 1fr;
+  }
+
+  .tab-bar {
+    width: 100%;
+  }
+
+  .tab-button {
+    flex: 1;
   }
 }
