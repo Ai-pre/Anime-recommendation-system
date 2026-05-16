@@ -6,16 +6,13 @@
   <title>회원제 애니 추천</title>
   <meta property="og:title" content="회원제 애니 추천">
   <meta property="og:description" content="애니를 평가하면 개인 하이브리드 추천을 보여줍니다.">
-  <link rel="stylesheet" href="{{ url_for('static', filename='app.css', v='member-copy-2') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='app.css', v='member-title-1') }}">
 </head>
 <body class="member-page">
   <main class="shell">
     <section class="hero">
       <p class="eyebrow">애니메이션 추천 시스템 <span class="view-badge">조회수 {{ visit_count }}</span></p>
-      <h1>애니 좀 봐주세요</h1>
-      <div class="hero-actions">
-        <a class="ghost-link" href="{{ url_for('anime_map') }}">애니 라이브러리 둘러보기</a>
-      </div>
+      <h1>PLS_SEE_ANIME</h1>
     </section>
 
     <section id="authPanel" class="auth-grid">
@@ -50,7 +47,10 @@
           <h2><span id="usernameLabel"></span>님</h2>
           <p id="ratingStatus" class="status"></p>
         </div>
-        <button id="logoutButton">로그아웃</button>
+        <div class="member-actions">
+          <a class="ghost-link muted" href="{{ url_for('anime_map') }}">애니 라이브러리 둘러보기</a>
+          <button id="logoutButton">로그아웃</button>
+        </div>
       </section>
 
       <nav class="tab-bar" aria-label="추천 메뉴">
@@ -115,6 +115,6 @@
   <script>
     window.RATING_THRESHOLD = {{ threshold }};
   </script>
-  <script src="{{ url_for('static', filename='member_app.js', v='member-copy-2') }}"></script>
+  <script src="{{ url_for('static', filename='member_app.js', v='member-title-1') }}"></script>
 </body>
 </html>

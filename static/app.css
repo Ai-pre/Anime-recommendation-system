@@ -173,6 +173,13 @@ h1 {
   margin-bottom: 18px;
 }
 
+.member-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
 .tab-bar {
   display: flex;
   align-items: center;
@@ -593,6 +600,10 @@ button,
   .member-bar,
   .rating-row {
     grid-template-columns: 1fr;
+  }
+
+  .member-actions {
+    justify-content: flex-start;
   }
 
   .tab-bar {
