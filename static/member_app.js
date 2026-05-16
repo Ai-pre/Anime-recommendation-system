@@ -23,6 +23,32 @@ const ratingSearchResults = $("#ratingSearchResults");
 const ratingList = $("#ratingList");
 
 const selectedContentAnime = new Map();
+const essentialAnime = [
+  {
+    title: "Steins;Gate",
+    genres: "Thriller, Sci-Fi",
+    type: "TV",
+    score: 9.11,
+  },
+  {
+    title: "Shingeki no Kyojin: The Final Season",
+    genres: "Action, Military, Mystery, Super Power, Drama, Fantasy",
+    type: "TV",
+    score: 8.81,
+  },
+  {
+    title: "Code Geass: Hangyaku no Lelouch",
+    genres: "Action, Military, Sci-Fi, Super Power, Drama, Mecha, School",
+    type: "TV",
+    score: 8.71,
+  },
+  {
+    title: "JoJo no Kimyou na Bouken (TV)",
+    genres: "Action, Adventure, Supernatural, Vampire, Shounen",
+    type: "TV",
+    score: 8.0,
+  },
+];
 let currentUser = null;
 
 async function api(path, options = {}) {
@@ -290,14 +316,13 @@ async function loadRatings() {
 async function loadPersonalRecommendations() {
   const data = await api("/api/recommendations");
   personalGrid.innerHTML = "";
+  personalStatus.textContent = "";
   if (!data.ready) {
-    const remain = Math.max(0, data.threshold - data.rating_count);
-    personalStatus.textContent = `아직 개인 추천 전입니다. ${remain}개 더 평가해주세요.`;
+    renderEssentialAnime();
     return;
   }
-  personalStatus.textContent = `평가 ${data.rating_count}개 기반 추천입니다.`;
   if (data.recommendations.length === 0) {
-    personalStatus.textContent = "추천 후보가 부족합니다. 다른 애니를 몇 개 더 평가해보세요.";
+    renderEssentialAnime();
     return;
   }
   for (const item of data.recommendations) {
@@ -315,6 +340,29 @@ async function loadPersonalRecommendations() {
     `;
     personalGrid.appendChild(card);
   }
+}
+
+function renderEssentialAnime() {
+  personalGrid.innerHTML = "";
+  const title = document.createElement("h3");
+  title.className = "grid-heading";
+  title.textContent = "필수 시청 애니메이션!!";
+  personalGrid.appendChild(title);
+
+  essentialAnime.forEach((item, index) => {
+    const card = document.createElement("article");
+    card.className = "card";
+    card.innerHTML = `
+      <div class="rank">#${index + 1}</div>
+      <h3>${item.title}</h3>
+      <p>${item.genres}</p>
+      <div class="meta">
+        <span>${item.type}</span>
+        <span>평점 ${item.score}</span>
+      </div>
+    `;
+    personalGrid.appendChild(card);
+  });
 }
 
 $("#loginButton").addEventListener("click", () => {

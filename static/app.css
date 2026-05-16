@@ -397,6 +397,12 @@ button,
   margin-top: 18px;
 }
 
+.grid-heading {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 22px;
+}
+
 .result-item,
 .card {
   position: relative;
