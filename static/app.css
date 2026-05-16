@@ -185,14 +185,13 @@ h1 {
 }
 
 .tab-bar {
-  position: relative;
   display: flex;
   align-items: center;
   gap: 10px;
   width: fit-content;
   max-width: 100%;
   margin: 0 0 18px;
-  padding: 6px 6px 12px;
+  padding: 6px;
   border: 1px solid var(--line);
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.42);
@@ -214,21 +213,28 @@ h1 {
   box-shadow: 0 18px 42px rgba(37, 99, 235, 0.28);
 }
 
-.tab-indicator {
-  position: absolute;
-  left: var(--tab-left, 6px);
-  bottom: 5px;
-  width: var(--tab-width, 84px);
-  height: 4px;
-  border-radius: 999px;
-  background: linear-gradient(90deg, #67e8f9, #2563eb);
-  box-shadow: 0 8px 22px rgba(37, 99, 235, 0.32);
-  transition: left 240ms ease, width 240ms ease;
+.tab-viewport {
+  overflow: hidden;
+  width: 100%;
+}
+
+.tab-track {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 100%));
+  align-items: start;
+  transform: translateX(0);
+  transition: transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.tab-track.show-ratings {
+  transform: translateX(-100%);
 }
 
 .tab-panel {
   display: grid;
   gap: 18px;
+  min-width: 0;
+  padding: 0;
 }
 
 .tab-panel > .preview {

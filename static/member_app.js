@@ -9,11 +9,11 @@ const usernameLabel = $("#usernameLabel");
 const ratingStatus = $("#ratingStatus");
 const personalStatus = $("#personalStatus");
 const personalGrid = $("#personalGrid");
+const tabTrack = $("#tabTrack");
 const recommendTab = $("#recommendTab");
 const ratingTab = $("#ratingTab");
 const recommendTabButton = $("#recommendTabButton");
 const ratingTabButton = $("#ratingTabButton");
-const tabIndicator = $("#tabIndicator");
 const contentSearchInput = $("#contentSearchInput");
 const contentSearchResults = $("#contentSearchResults");
 const contentSelectedList = $("#contentSelectedList");
@@ -51,20 +51,14 @@ function showAuth(mode = "login") {
 
 function showTab(tabName) {
   const showingRatings = tabName === "ratings";
-  recommendTab.classList.toggle("hidden", showingRatings);
-  ratingTab.classList.toggle("hidden", !showingRatings);
+  tabTrack.classList.toggle("show-ratings", showingRatings);
   recommendTabButton.classList.toggle("active", !showingRatings);
   ratingTabButton.classList.toggle("active", showingRatings);
-  moveTabIndicator(showingRatings ? ratingTabButton : recommendTabButton);
+  recommendTab.setAttribute("aria-hidden", String(showingRatings));
+  ratingTab.setAttribute("aria-hidden", String(!showingRatings));
+  recommendTab.inert = showingRatings;
+  ratingTab.inert = !showingRatings;
   setStatus("");
-}
-
-function moveTabIndicator(activeButton) {
-  if (!activeButton || !tabIndicator) return;
-  requestAnimationFrame(() => {
-    tabIndicator.style.setProperty("--tab-left", `${activeButton.offsetLeft}px`);
-    tabIndicator.style.setProperty("--tab-width", `${activeButton.offsetWidth}px`);
-  });
 }
 
 function showApp(user) {
@@ -368,6 +362,3 @@ ratingSearchInput.addEventListener("keydown", (event) => {
 
 renderSelectedContent();
 refreshMe().catch((error) => setStatus(error.message));
-window.addEventListener("resize", () => {
-  moveTabIndicator(ratingTabButton.classList.contains("active") ? ratingTabButton : recommendTabButton);
-});
