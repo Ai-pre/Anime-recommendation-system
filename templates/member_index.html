@@ -6,7 +6,7 @@
   <title>회원제 애니 추천</title>
   <meta property="og:title" content="회원제 애니 추천">
   <meta property="og:description" content="애니를 평가하면 개인 하이브리드 추천을 보여줍니다.">
-  <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='app.css', v='member-auth-1') }}">
 </head>
 <body>
   <main class="shell">
@@ -20,18 +20,29 @@
     </section>
 
     <section id="authPanel" class="auth-grid">
-      <article class="panel">
-        <h2>로그인</h2>
-        <input id="loginName" autocomplete="username" placeholder="아이디">
-        <input id="loginPassword" autocomplete="current-password" type="password" placeholder="비밀번호">
-        <button id="loginButton" class="primary">로그인</button>
-      </article>
-      <article class="panel">
-        <h2>회원가입</h2>
-        <input id="registerName" autocomplete="username" placeholder="아이디">
-        <input id="registerPassword" autocomplete="new-password" type="password" placeholder="비밀번호">
-        <button id="registerButton">회원가입</button>
-      </article>
+      <div class="auth-shell">
+        <article id="loginCard" class="panel auth-card">
+          <h2>로그인</h2>
+          <input id="loginName" autocomplete="username" placeholder="아이디">
+          <input id="loginPassword" autocomplete="current-password" type="password" placeholder="비밀번호">
+          <button id="loginButton" class="primary">로그인</button>
+          <div class="auth-switch">
+            <span>처음이라면</span>
+            <button id="showRegisterButton" class="text-link" type="button">회원가입</button>
+          </div>
+        </article>
+
+        <article id="registerCard" class="panel auth-card hidden">
+          <h2>회원가입</h2>
+          <input id="registerName" autocomplete="username" placeholder="아이디">
+          <input id="registerPassword" autocomplete="new-password" type="password" placeholder="비밀번호">
+          <button id="registerButton" class="primary">회원가입</button>
+          <div class="auth-switch">
+            <span>이미 계정이 있다면</span>
+            <button id="showLoginButton" class="text-link" type="button">로그인</button>
+          </div>
+        </article>
+      </div>
     </section>
 
     <section id="appPanel" class="hidden">
@@ -70,6 +81,6 @@
   <script>
     window.RATING_THRESHOLD = {{ threshold }};
   </script>
-  <script src="{{ url_for('static', filename='member_app.js') }}"></script>
+  <script src="{{ url_for('static', filename='member_app.js', v='member-auth-1') }}"></script>
 </body>
 </html>

@@ -2,6 +2,8 @@ const $ = (selector) => document.querySelector(selector);
 
 const authPanel = $("#authPanel");
 const appPanel = $("#appPanel");
+const loginCard = $("#loginCard");
+const registerCard = $("#registerCard");
 const statusEl = $("#status");
 const usernameLabel = $("#usernameLabel");
 const ratingStatus = $("#ratingStatus");
@@ -27,6 +29,15 @@ function setStatus(message) {
   statusEl.textContent = message || "";
 }
 
+function showAuth(mode = "login") {
+  authPanel.classList.remove("hidden");
+  appPanel.classList.add("hidden");
+  setStatus("");
+  const showingRegister = mode === "register";
+  loginCard.classList.toggle("hidden", showingRegister);
+  registerCard.classList.toggle("hidden", !showingRegister);
+}
+
 function showApp(user) {
   currentUser = user;
   authPanel.classList.add("hidden");
@@ -45,8 +56,7 @@ function updateRatingStatus(user) {
 async function refreshMe() {
   const data = await api("/api/me");
   if (!data.authenticated) {
-    authPanel.classList.remove("hidden");
-    appPanel.classList.add("hidden");
+    showAuth("login");
     return;
   }
   showApp(data.user);
@@ -74,8 +84,7 @@ async function register(username, password) {
 async function logout() {
   await api("/api/logout", { method: "POST", body: "{}" });
   currentUser = null;
-  authPanel.classList.remove("hidden");
-  appPanel.classList.add("hidden");
+  showAuth("login");
   searchResults.innerHTML = "";
   ratingList.innerHTML = "";
   personalGrid.innerHTML = "";
@@ -204,6 +213,10 @@ $("#loginButton").addEventListener("click", () => {
 $("#registerButton").addEventListener("click", () => {
   register($("#registerName").value.trim(), $("#registerPassword").value).catch((error) => setStatus(error.message));
 });
+
+$("#showRegisterButton").addEventListener("click", () => showAuth("register"));
+
+$("#showLoginButton").addEventListener("click", () => showAuth("login"));
 
 $("#logoutButton").addEventListener("click", () => {
   logout().catch((error) => setStatus(error.message));
