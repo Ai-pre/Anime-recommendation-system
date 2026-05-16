@@ -326,7 +326,8 @@ button,
   box-shadow: 0 14px 34px rgba(37, 99, 235, 0.14);
 }
 
-.ghost-link.muted {
+.ghost-link.muted,
+button.muted {
   background: rgba(255, 255, 255, 0.54);
   color: var(--ink);
 }

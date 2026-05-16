@@ -6,7 +6,7 @@
   <title>회원제 애니 추천</title>
   <meta property="og:title" content="회원제 애니 추천">
   <meta property="og:description" content="애니를 평가하면 개인 하이브리드 추천을 보여줍니다.">
-  <link rel="stylesheet" href="{{ url_for('static', filename='app.css', v='member-title-1') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='app.css', v='member-library-1') }}">
 </head>
 <body class="member-page">
   <main class="shell">
@@ -49,7 +49,7 @@
         </div>
         <div class="member-actions">
           <a class="ghost-link muted" href="{{ url_for('anime_map') }}">애니 라이브러리 둘러보기</a>
-          <button id="logoutButton">로그아웃</button>
+          <button id="logoutButton" class="muted">로그아웃</button>
         </div>
       </section>
 
@@ -115,6 +115,6 @@
   <script>
     window.RATING_THRESHOLD = {{ threshold }};
   </script>
-  <script src="{{ url_for('static', filename='member_app.js', v='member-title-1') }}"></script>
+  <script src="{{ url_for('static', filename='member_app.js', v='member-library-1') }}"></script>
 </body>
 </html>
