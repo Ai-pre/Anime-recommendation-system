@@ -106,13 +106,13 @@ python member_app.py --host 127.0.0.1 --port 8100
 
 | Folder / file | Role |
 |:--|:--|
-| [\`anime_recommender/training.py\`](anime_recommender/training.py) | SVD / hybrid 모델 학습 |
-| [\`anime_recommender/content_similarity.py\`](anime_recommender/content_similarity.py) | 콘텐츠 유사도 계산 |
-| [\`anime_recommender/inference.py\`](anime_recommender/inference.py) | 추천 추론 |
-| [\`anime_recommender/svd_light.py\`](anime_recommender/svd_light.py) | 경량 SVD 추론 경로 |
-| [\`anime_recommender/member_web.py\`](anime_recommender/member_web.py) | 회원 서비스 |
-| [\`anime_recommender/visualization.py\`](anime_recommender/visualization.py) | 3D 시각화 |
-| [\`data/\`](data/) | 학습·입력 데이터 (대용량 일부 Git LFS) |
+| [`anime_recommender/training.py`](anime_recommender/training.py) | SVD / hybrid 모델 학습 |
+| [`anime_recommender/content_similarity.py`](anime_recommender/content_similarity.py) | 콘텐츠 유사도 계산 |
+| [`anime_recommender/inference.py`](anime_recommender/inference.py) | 추천 추론 |
+| [`anime_recommender/svd_light.py`](anime_recommender/svd_light.py) | 경량 SVD 추론 경로 |
+| [`anime_recommender/member_web.py`](anime_recommender/member_web.py) | 회원 서비스 |
+| [`anime_recommender/visualization.py`](anime_recommender/visualization.py) | 3D 시각화 |
+| [`data/`](data/) | 학습·입력 데이터 (대용량 일부 Git LFS) |
 
 ## Limitations
 
